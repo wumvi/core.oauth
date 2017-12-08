@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Vk;
+namespace Core\OAuth\Social\Vk;
 
-use Wumvi\Classes\Read;
+use Core\Model\Read;
 
 /**
  * Модель пользователя VK

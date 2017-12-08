@@ -1,9 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Vk;
+namespace Core\OAuth\Social\Vk;
 
-use Wumvi\Classes\CurlExt;
+use LightweightCurl\Curl;
+use LightweightCurl\Request;
+use LightweightCurl\CurlException;
 
 /**
  * Сервис работы с API сайта ВКонтакте
@@ -12,7 +14,9 @@ class VkSocialService
 {
     const URL_API = 'https://api.vk.com/method/';
 
-    /** @var CurlExt Расширенный curl */
+    /**
+     * @var Curl Расширенный curl
+     */
     protected $curl;
 
     /** @var string ID сайта */
@@ -28,7 +32,7 @@ class VkSocialService
      */
     public function __construct(string $siteId, string $clientSecret)
     {
-        $this->curl = new CurlExt();
+        $this->curl = new Curl();
         $this->siteId = $siteId;
         $this->clientSecret = $clientSecret;
     }
@@ -37,12 +41,15 @@ class VkSocialService
      * Получение информацию по пользователю
      * @param string $vkUserId Id пользователя сайта Вконтакте
      * @param string $accessToken AccessToken
+     *
      * @see https://vk.com/dev/users.get
+     *
      * @return VkUser|null
+     *
+     * @throws CurlException
      */
     public function getUserInfo(string $vkUserId, string $accessToken): ?VkUser
     {
-        //
         $params = [
             'user_id' => $vkUserId,
             'vk' => '5.8',
@@ -50,10 +57,13 @@ class VkSocialService
             'fields' => 'sex,bdate',
         ];
 
-        $url = self::URL_API . 'users.get';
-        $data = $this->curl->get($url, $params);
-        $data = @json_decode($data);
+        $url = vsprintf(self::URL_API . 'users.get?%s', [http_build_query($params),]);
 
+        $request = new Request();
+        $request->setUrl($url);
+
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData());
         if (!isset($data->response) || !$data->response || count($data->response) == 0) {
             return null;
         }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Wumvi\Classes\OAuth\OAuthBase\Mailru;
+namespace Core\OAuth\OAuthBase\Mailru;
 
-use Wumvi\Classes\OAuth\OAuthBase\OAuthBase;
-use \Wumvi\Classes\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\OAuthBase;
+use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Управление OAuth авторизацией для сайта Mail.ru

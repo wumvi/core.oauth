@@ -1,9 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\OAuth\OAuthBase;
+namespace Core\OAuth\OAuthBase;
 
-use Wumvi\Classes\CurlExt;
+use Core\OAuth\CurlExt;
+use LightweightCurl;
 
 abstract class OAuthBase
 {
@@ -57,9 +58,9 @@ abstract class OAuthBase
             'redirect_uri' => $redirectUri
         ]);
 
-        $data = @json_decode($data);
+        $data = json_decode($data);
 
-        return isset($data->error) ? null : $this->getTokenCodeResponse($data);
+        return $data === null || isset($data->error) ? null : $this->getTokenCodeResponse($data);
     }
 
     /**
@@ -75,7 +76,7 @@ abstract class OAuthBase
             'refresh_token' => $refreshToken
         ]);
 
-        $data = @json_decode($data);
+        $data = json_decode($data);
 
         return isset($data->error) ? null : $this->getTokenCodeResponse($data);
     }

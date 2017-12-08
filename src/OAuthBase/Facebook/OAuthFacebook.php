@@ -1,18 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\OAuth\OAuthBase\Facebook;
+namespace Core\OAuth\OAuthBase\Facebook;
 
-use Wumvi\Classes\OAuth\OAuthBase\OAuthBase;
-use \Wumvi\Classes\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\OAuthBase;
+use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Управление OAuth авторизацией для сайта Facebook
  */
 class OAuthFacebook extends OAuthBase
 {
-    const USER_DB_OAUTH_KEY = 'facebook';
-
     /**
      * @inheritdoc
      */

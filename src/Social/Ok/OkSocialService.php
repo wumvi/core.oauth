@@ -1,9 +1,11 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Ok;
+namespace Core\OAuth\Social\Ok;
 
-use Wumvi\Classes\CurlExt;
+use LightweightCurl\Curl;
+use LightweightCurl\Request;
+use LightweightCurl\CurlException;
 
 /**
  * @author Kozlenko Vitaliy
@@ -11,7 +13,11 @@ use Wumvi\Classes\CurlExt;
  */
 class OkSocialService
 {
-    /** @var CurlExt Расширенный curl */
+    private const URL_API = 'http://api.odnoklassniki.ru/fb.do?%s';
+
+    /**
+     * @var Curl Расширенный curl
+     */
     protected $curl;
 
     /** @var string ID приложения */
@@ -31,7 +37,7 @@ class OkSocialService
      */
     public function __construct(string $appId, string $privateKey, string $publicKey)
     {
-        $this->curl = new CurlExt();
+        $this->curl = new Curl();
         $this->appId = $appId;
         $this->privateKey = $privateKey;
         $this->publicKey = $publicKey;
@@ -39,8 +45,12 @@ class OkSocialService
 
     /**
      * Получаем модель пользователя сайта Одноклассники
+     *
      * @param string $authToken AuthToken
+     *
      * @return OkUser|null
+     *
+     * @throws CurlException
      */
     public function getUserInfo(string $authToken): ?OkUser
     {
@@ -54,9 +64,14 @@ class OkSocialService
             'sig' => $sing
         ];
 
-        $data = $this->curl->get('http://api.odnoklassniki.ru/fb.do?' . http_build_query($params));
-        $data = @json_decode($data);
-        if (!$data) {
+        $url = vsprintf(self::URL_API, [http_build_query($params),]);
+
+        $request = new Request();
+        $request->setUrl($url);
+
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData());
+        if ($data === null) {
             return null;
         }
 

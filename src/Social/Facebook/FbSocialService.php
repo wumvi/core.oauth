@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Wumvi\Classes\Social\Facebook;
+namespace Core\OAuth\Social\Facebook;
 
-use Wumvi\Classes\CurlExt;
-use Wumvi\Classes\Utils\ArrayHelp;
+use LightweightCurl\Curl;
+use LightweightCurl\Request;
+use LightweightCurl\CurlException;
 
 /**
  * Сервис для Facebook
@@ -13,8 +14,11 @@ use Wumvi\Classes\Utils\ArrayHelp;
  */
 class FbSocialService
 {
+    private const URL_API = 'https://graph.facebook.com/me?fields=' .
+    'birthday,website,email,first_name,last_name,gender&access_token=%s';
+
     /**
-     * @var CurlExt Расширенный curl
+     * @var Curl Расширенный curl
      */
     protected $curl;
 
@@ -35,7 +39,7 @@ class FbSocialService
      */
     public function __construct(string $appId, string $privateKey)
     {
-        $this->curl = new CurlExt();
+        $this->curl = new Curl();
         $this->appId = $appId;
         $this->privateKey = $privateKey;
     }
@@ -48,13 +52,19 @@ class FbSocialService
      * @return FbUser|null Модель пользователя
      *
      * @see https://developers.facebook.com/docs/graph-api/reference/user
+     *
+     * @throws CurlException
      */
     public function getUserInfo(string $authToken): ?FbUser
     {
-        $data = $this->curl->get('https://graph.facebook.com/me?fields=birthday,website,email,first_name,' .
-            'last_name,gender&access_token=' . $authToken);
-        $data = @json_decode($data);
-        if (!$data) {
+        $url = vsprintf(self::URL_API, [$authToken,]);
+
+        $request = new Request();
+        $request->setUrl($url);
+
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData());
+        if ($data === null) {
             return null;
         }
 

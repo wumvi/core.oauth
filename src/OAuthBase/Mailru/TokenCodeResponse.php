@@ -1,9 +1,9 @@
 <?php
 
-namespace Wumvi\Classes\OAuth\OAuthBase\Mailru;
+namespace Core\OAuth\OAuthBase\Mailru;
 
-use Wumvi\Classes\Read;
-use \Wumvi\Classes\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\Model\Read;
+use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * TokenCodeResponse

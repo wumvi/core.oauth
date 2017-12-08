@@ -1,12 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Mailru;
+namespace Core\OAuth\Social\Mailru;
 
-use Wumvi\Classes\CurlExt;
-use Wumvi\Classes\Utils\JsonToReadConverter;
-use Wumvi\Classes\OAuth\OAuthBase\Mailru\TokenCodeResponse;
-use Wumvi\Classes\Utils\ArrayHelp;
+use LightweightCurl\Curl;
+use LightweightCurl\Request;
+use LightweightCurl\CurlException;
+
+use Core\Utils\JsonToReadConverter;
+use Core\OAuth\OAuthBase\Mailru\TokenCodeResponse;
 
 /**
  * @author Козленко В.Л.
@@ -17,8 +19,11 @@ class MailruService
 {
     const URL_API = 'http://www.appsmail.ru/platform/api';
 
-    /** @var CurlExt Расширенный curl */
+    /**
+     * @var Curl Расширенный curl
+     */
     protected $curl;
+
     protected $siteId;
     protected $clientSecret;
 
@@ -29,7 +34,7 @@ class MailruService
      */
     public function __construct(string $siteId, string $clientSecret)
     {
-        $this->curl = new CurlExt();
+        $this->curl = new Curl();
         $this->siteId = $siteId;
         $this->clientSecret = $clientSecret;
     }
@@ -38,6 +43,8 @@ class MailruService
      * @param TokenCodeResponse $accessToken
      *
      * @return MailRuUser|null Массив моделей пользователей
+     *
+     * @throws CurlException
      */
     public function getUserInfo($accessToken): ?MailRuUser
     {
@@ -50,9 +57,16 @@ class MailruService
         ];
 
         $params['sig'] = $this->createSign($params);
-        $data = $this->curl->post(self::URL_API, $params);
-        $data = @json_decode($data, true);
-        if (isset($data['error'])) {
+
+        $request = new Request();
+        $request->setUrl(self::URL_API);
+        $request->setData($params);
+        $request->setMethod(Request::METHOD_POST);
+
+
+        $data = $this->curl->call($request);
+        $data = json_decode($data, true);
+        if ($data === null || isset($data['error'])) {
             return null;
         }
 
@@ -76,7 +90,6 @@ class MailruService
      */
     protected function createSign($params)
     {
-        $sign = (new ArrayHelp())->arrayKeyValueJoin($params);
-        return md5($sign . $this->clientSecret);
+        return md5(http_build_query($params) . $this->clientSecret);
     }
 }

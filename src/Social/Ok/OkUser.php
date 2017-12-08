@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Ok;
+namespace Core\OAuth\Social\Ok;
 
-use Wumvi\Classes\Read;
+use Core\Model\Read;
 
 /**
  * Модель пользователя сайта Одноклассники

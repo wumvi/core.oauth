@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\OAuth\OAuthBase\Ok;
+namespace Core\OAuth\OAuthBase\Ok;
 
-use Wumvi\Classes\Read;
-use \Wumvi\Classes\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\Model\Read;
+use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Модель токена для сайта Одноклассники

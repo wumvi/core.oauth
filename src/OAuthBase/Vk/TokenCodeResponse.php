@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\OAuth\OAuthBase\Vk;
+namespace Core\OAuth\OAuthBase\Vk;
 
-use Wumvi\Classes\Read;
-use \Wumvi\Classes\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\Model\Read;
+use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Модель данных от VK, после OAuth авторизации

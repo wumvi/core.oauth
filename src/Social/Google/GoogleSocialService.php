@@ -1,36 +1,46 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Google;
+namespace Core\OAuth\Social\Google;
 
-use Wumvi\Classes\CurlExt;
-use Wumvi\Classes\Utils\ArrayHelp;
+use LightweightCurl\Curl;
+use LightweightCurl\Request;
+use LightweightCurl\CurlException;
 
 /**
  * @author Kozlenko Vitaliy
  */
 class GoogleSocialService
 {
-    /** @var CurlExt Расширенный curl */
+    /**
+     * @var Curl Расширенный curl
+     */
     protected $curl;
 
     public function __construct()
     {
-        $this->curl = new CurlExt();
+        $this->curl = new Curl();
     }
 
     /**
      * @param string $accessToken
+     *
      * @return GoogleUser|null
+     *
+     * @throws CurlException
      */
     public function getUserInfo(string $accessToken): ?GoogleUser
     {
-        $data = $this->curl->get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $accessToken);
-        $data = @json_decode($data);
-        if (!$data) {
+        $url = vsprintf('https://www.googleapis.com/oauth2/v1/userinfo?access_token=%s', [$accessToken,]);
+
+        $request = new Request();
+        $request->setUrl($url);
+
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData());
+        if ($data === null) {
             return null;
         }
-
         return new GoogleUser([
             GoogleUser::PROP_ID => $data->id,
             GoogleUser::PROP_EMAIL => $data->email,

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Facebook;
+namespace Core\OAuth\Social\Facebook;
 
-use Wumvi\Classes\Read;
+use Core\Model\Read;
 
 /**
  * Модель пользователя сайта Facebook

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\OAuth\OAuthBase\Yandex;
+namespace Core\OAuth\OAuthBase\Yandex;
 
-use Wumvi\Classes\Read;
-use \Wumvi\Classes\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\Model\Read;
+use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Модель Token сайта Яндекс

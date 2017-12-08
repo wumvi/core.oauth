@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\OAuth\OAuthBase;
+namespace Core\OAuth\OAuthBase;
 
 /**
  * Interface TokenCodeResponse

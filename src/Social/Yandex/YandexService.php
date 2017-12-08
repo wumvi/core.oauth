@@ -1,17 +1,21 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Yandex;
+namespace Core\OAuth\Social\Yandex;
 
-use Wumvi\Classes\CurlExt;
+use LightweightCurl\Curl;
+use LightweightCurl\Request;
+use LightweightCurl\CurlException;
 
 /**
  * Class YandexService
- * @package Wumvi\Classes\Social\Yandex
  */
 class YandexService
 {
-    /** @var CurlExt Расширенный curl */
+    private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=';
+    /**
+     * @var Curl Расширенный curl
+     */
     protected $curl;
 
     /**
@@ -19,18 +23,26 @@ class YandexService
      */
     public function __construct()
     {
-        $this->curl = new CurlExt();
+        $this->curl = new Curl();
     }
 
     /**
      * @param string $authToken
+     *
      * @return YaUser|null
+     *
+     * @throws CurlException
      */
     public function getUserInfo(string $authToken): ?YaUser
     {
-        $data = $this->curl->get('https://login.yandex.ru/info?format=json&oauth_token=' . $authToken);
-        $data = @json_decode($data);
-        if (!$data) {
+        $url = vsprintf(self::URL_API, [$authToken,]);
+
+        $request = new Request();
+        $request->setUrl($url);
+
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData());
+        if ($data === null) {
             return null;
         }
 

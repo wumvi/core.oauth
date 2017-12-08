@@ -1,10 +1,10 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\OAuth\OAuthBase\Yandex;
+namespace Core\OAuth\OAuthBase\Yandex;
 
-use Wumvi\Classes\OAuth\OAuthBase\OAuthBase;
-use \Wumvi\Classes\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\OAuthBase;
+use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Управление OAuth авторизацией для сайта Yandex

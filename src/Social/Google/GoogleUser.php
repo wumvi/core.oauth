@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Google;
+namespace Core\OAuth\Social\Google;
 
-use Wumvi\Classes\Read;
+use Core\Model\Read;
 
 /**
  * Модель пользователя сайта Google.com

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Wumvi\Classes\Social\Mailru;
+namespace Core\OAuth\Social\Mailru;
 
-use Wumvi\Classes\Read;
+use Core\Model\Read;
 
 /**
  * Модель пользователя сайта Mail.ru
