@@ -1,23 +1,31 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase;
 
-use Core\OAuth\CurlExt;
-use LightweightCurl;
+use LightweightCurl\Curl;
+use LightweightCurl\Request;
 
 abstract class OAuthBase
 {
-    /** @var CurlExt Расширенный curl */
+    /**
+     * @var Curl Расширенный curl
+     */
     protected $curl;
 
-    /** @var string ID сайта */
+    /**
+     * @var string ID сайта
+     */
     protected $siteId;
 
-    /** @var string Секретный ключ */
+    /**
+     * @var string Секретный ключ
+     */
     protected $clientSecret;
 
-    /** @var string URL для обращения */
+    /**
+     * @var string URL для обращения
+     */
     protected $tokenUrl;
 
     /**
@@ -29,7 +37,7 @@ abstract class OAuthBase
      */
     public function __construct(string $siteId, string $clientSecret, string $tokenUrl)
     {
-        $this->curl = new CurlExt();
+        $this->curl = new Curl();
         $this->siteId = $siteId;
         $this->clientSecret = $clientSecret;
         $this->tokenUrl = $tokenUrl;
@@ -50,15 +58,21 @@ abstract class OAuthBase
      */
     public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
     {
-        $data = $this->curl->post($this->tokenUrl, [
+        $post = [
             'client_id' => $this->siteId,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'authorization_code',
             'code' => $code,
             'redirect_uri' => $redirectUri
-        ]);
+        ];
 
-        $data = json_decode($data);
+        $request = new Request();
+        $request->setUrl($this->tokenUrl);
+        $request->setData($post);
+        $request->setMethod(Request::METHOD_POST);
+
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData());
 
         return $data === null || isset($data->error) ? null : $this->getTokenCodeResponse($data);
     }
@@ -69,15 +83,21 @@ abstract class OAuthBase
      */
     public function getRefreshTokenCode($refreshToken): ?TokenCodeResponseInterface
     {
-        $data = $this->curl->post($this->tokenUrl, [
+        $post = [
             'client_id' => $this->siteId,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken
-        ]);
+        ];
 
-        $data = json_decode($data);
+        $request = new Request();
+        $request->setUrl($this->tokenUrl);
+        $request->setData($post);
+        $request->setMethod(Request::METHOD_POST);
 
-        return isset($data->error) ? null : $this->getTokenCodeResponse($data);
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData());
+
+        return $data === null || isset($data->error) ? null : $this->getTokenCodeResponse($data);
     }
 }

@@ -13,6 +13,7 @@ use LightweightCurl\CurlException;
 class YandexService
 {
     private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=';
+
     /**
      * @var Curl Расширенный curl
      */

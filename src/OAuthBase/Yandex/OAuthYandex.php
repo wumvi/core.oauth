@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Yandex;
 
@@ -13,7 +13,8 @@ class OAuthYandex extends OAuthBase
 {
     /**
      * @param Object $data Сырые данные из запроса
-     * @return TokenCodeResponse
+     *
+     * @return TokenCodeResponseInterface
      */
     protected function getTokenCodeResponse($data): TokenCodeResponseInterface
     {

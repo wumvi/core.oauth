@@ -13,5 +13,5 @@ use \Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 class TokenCodeResponse extends Read implements TokenCodeResponseInterface
 {
     /** AccessToken Google */
-    const PROP_ACCESS_TOKEN = 'accessToken';
+    public const PROP_ACCESS_TOKEN = 'accessToken';
 }

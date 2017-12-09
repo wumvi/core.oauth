@@ -17,14 +17,14 @@ use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 class TokenCodeResponse extends Read implements TokenCodeResponseInterface
 {
     /** Через сколько истекёт */
-    const PROP_EXPIRES_IN = 'expiresIn';
+    public const PROP_EXPIRES_IN = 'expiresIn';
 
     /** AccessTocken VK */
-    const PROP_ACCESS_TOKEN = 'accessToken';
+    public const PROP_ACCESS_TOKEN = 'accessToken';
 
     /** User ID в системе VK */
-    const PROP_USER_ID = 'userId';
+    public const PROP_USER_ID = 'userId';
 
     /** Email пользователя */
-    const PROP_EMAIL = 'email';
+    public const PROP_EMAIL = 'email';
 }

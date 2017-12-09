@@ -63,7 +63,6 @@ class MailruService
         $request->setData($params);
         $request->setMethod(Request::METHOD_POST);
 
-
         $data = $this->curl->call($request);
         $data = json_decode($data, true);
         if ($data === null || isset($data['error'])) {

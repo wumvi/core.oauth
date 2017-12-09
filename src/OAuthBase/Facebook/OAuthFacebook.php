@@ -1,10 +1,11 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Facebook;
 
 use Core\OAuth\OAuthBase\OAuthBase;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use LightweightCurl\Request;
 
 /**
  * Управление OAuth авторизацией для сайта Facebook
@@ -26,15 +27,22 @@ class OAuthFacebook extends OAuthBase
      */
     public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
     {
-        $data = $this->curl->post($this->tokenUrl, [
+        $post = [
             'client_id' => $this->siteId,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'authorization_code',
             'code' => $code,
             'redirect_uri' => $redirectUri
-        ]);
+        ];
 
-        @parse_str($data, $arr);
+        $request = new Request();
+        $request->setUrl($this->tokenUrl);
+        $request->setData($post);
+        $request->setMethod(Request::METHOD_POST);
+
+        $response = $this->curl->call($request);
+
+        parse_str($response->getData(), $arr);
         if (!isset($arr['access_token'])) {
             return null;
         }

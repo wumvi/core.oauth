@@ -13,9 +13,9 @@ use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
  */
 class TokenCodeResponse extends Read implements TokenCodeResponseInterface
 {
-    /** AccessTocken VK */
-    const PROP_ACCESS_TOKEN = 'accessToken';
+    /** AccessToken VK */
+    public const PROP_ACCESS_TOKEN = 'accessToken';
 
     /** User ID в системе VK */
-    const PROP_USER_ID = 'userId';
+    public const PROP_USER_ID = 'userId';
 }

@@ -13,8 +13,11 @@ class OAuthOk extends OAuthBase
 {
     /**
      * Получение модели TokenCodeResponse по данным с сервера сайта Однокласники
+     *
      * @see https://apiok.ru/wiki/pages/viewpage.action?pageId=81822109
+     *
      * @param Object $dataRaw Сырые данные после запроса access_token от сервера сайта Одноклассники
+     *
      * @return TokenCodeResponseInterface Модель токена
      */
     protected function getTokenCodeResponse($dataRaw): TokenCodeResponseInterface

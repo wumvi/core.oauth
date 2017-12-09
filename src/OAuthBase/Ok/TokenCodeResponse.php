@@ -14,5 +14,5 @@ use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 class TokenCodeResponse extends Read implements TokenCodeResponseInterface
 {
     /** Access Токен */
-    const PROP_ACCESS_TOKEN = 'accessToken';
+    public const PROP_ACCESS_TOKEN = 'accessToken';
 }
