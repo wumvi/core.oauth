@@ -8,10 +8,28 @@ use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Модель Token сайта Яндекс
- * @method string getAccessToken() Получаем AccessToken
  */
-class TokenCodeResponse extends Read implements TokenCodeResponseInterface
+class TokenCodeResponse implements TokenCodeResponseInterface
 {
     /** AccessToken */
     public const PROP_ACCESS_TOKEN = 'accessToken';
+
+    /**
+     * @var string
+     */
+    private $token;
+
+    /**
+     * TokenCodeResponse constructor.
+     * @param string $token
+     */
+    public function __construct(string $token)
+    {
+        $this->token = $token;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->token;
+    }
 }

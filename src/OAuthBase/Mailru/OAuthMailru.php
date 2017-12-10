@@ -16,9 +16,6 @@ class OAuthMailru extends OAuthBase
      */
     protected function getTokenCodeResponse($data): TokenCodeResponseInterface
     {
-        return new TokenCodeResponse([
-            TokenCodeResponse::PROP_ACCESS_TOKEN => $data->access_token,
-            TokenCodeResponse::PROP_USER_ID => $data->x_mailru_vid,
-        ]);
+        return new TokenCodeResponse($data->access_token,  $data->x_mailru_vid);
     }
 }

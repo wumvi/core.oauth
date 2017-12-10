@@ -17,11 +17,11 @@ class OAuthVk extends OAuthBase
      */
     protected function getTokenCodeResponse($data): TokenCodeResponseInterface
     {
-        return new TokenCodeResponse([
-            TokenCodeResponse::PROP_EXPIRES_IN => $data->expires_in,
-            TokenCodeResponse::PROP_ACCESS_TOKEN => $data->access_token,
-            TokenCodeResponse::PROP_USER_ID => $data->user_id,
-            TokenCodeResponse::PROP_EMAIL => $data->email,
-        ]);
+        return new TokenCodeResponse(
+            $data->expires_in,
+            $data->access_token,
+            $data->user_id,
+            $data->email
+        );
     }
 }

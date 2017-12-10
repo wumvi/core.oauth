@@ -1,18 +1,31 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Facebook;
 
-use Core\Model\Read;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Модель токена для сайта Facebook
- *
- * @method string getAccessToken()
  */
-class TokenCodeResponse extends Read implements TokenCodeResponseInterface
+class TokenCodeResponse implements TokenCodeResponseInterface
 {
-    /** Access Токен */
-    public const PROP_ACCESS_TOKEN = 'accessToken';
+    /**
+     * @var string
+     */
+    private $token;
+
+    /**
+     * TokenCodeResponse constructor.
+     * @param string $token
+     */
+    public function __construct(string $token)
+    {
+        $this->token = $token;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->token;
+    }
 }

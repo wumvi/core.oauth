@@ -14,8 +14,6 @@ class OAuthGoogle extends OAuthBase
      */
     protected function getTokenCodeResponse($data): TokenCodeResponseInterface
     {
-        return new TokenCodeResponse([
-            TokenCodeResponse::PROP_ACCESS_TOKEN => $data->access_token,
-        ]);
+        return new TokenCodeResponse($data->access_token);
     }
 }

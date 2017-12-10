@@ -22,8 +22,6 @@ class OAuthOk extends OAuthBase
      */
     protected function getTokenCodeResponse($dataRaw): TokenCodeResponseInterface
     {
-        return new TokenCodeResponse([
-            TokenCodeResponse::PROP_ACCESS_TOKEN => $dataRaw->access_token,
-        ]);
+        return new TokenCodeResponse($dataRaw->access_token);
     }
 }

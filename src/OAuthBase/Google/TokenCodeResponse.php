@@ -8,10 +8,25 @@ use \Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * TokenCodeResponse
- * @method string getAccessToken() Получаем AccessToken
  */
-class TokenCodeResponse extends Read implements TokenCodeResponseInterface
+class TokenCodeResponse implements TokenCodeResponseInterface
 {
-    /** AccessToken Google */
-    public const PROP_ACCESS_TOKEN = 'accessToken';
+    /**
+     * @var string
+     */
+    private $token;
+
+    /**
+     * TokenCodeResponse constructor.
+     * @param string $token
+     */
+    public function __construct(string $token)
+    {
+        $this->token = $token;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->token;
+    }
 }

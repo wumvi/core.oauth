@@ -2,20 +2,40 @@
 
 namespace Core\OAuth\OAuthBase\Mailru;
 
-use Core\Model\Read;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * TokenCodeResponse
- *
- * @method string getAccessToken() AccessToken
- * @method string getUserId() Id пользователя
  */
-class TokenCodeResponse extends Read implements TokenCodeResponseInterface
+class TokenCodeResponse implements TokenCodeResponseInterface
 {
-    /** AccessToken VK */
-    public const PROP_ACCESS_TOKEN = 'accessToken';
+    /**
+     * @var string
+     */
+    private $token;
 
-    /** User ID в системе VK */
-    public const PROP_USER_ID = 'userId';
+    /**
+     * @var string
+     */
+    private $userId;
+
+    /**
+     * TokenCodeResponse constructor.
+     * @param string $token
+     */
+    public function __construct(string $token, string $userId)
+    {
+        $this->token = $token;
+        $this->userId = $userId;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->token;
+    }
+
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
 }

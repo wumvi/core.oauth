@@ -47,6 +47,6 @@ class OAuthFacebook extends OAuthBase
             return null;
         }
 
-        return new TokenCodeResponse([TokenCodeResponse::PROP_ACCESS_TOKEN => $arr['access_token']]);
+        return new TokenCodeResponse($arr['access_token']);
     }
 }

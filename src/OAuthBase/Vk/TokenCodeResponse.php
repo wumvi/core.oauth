@@ -1,30 +1,73 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Vk;
 
-use Core\Model\Read;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**
  * Модель данных от VK, после OAuth авторизации
- *
- * @method integer getExpiresIn() Через сколько истекёт
- * @method string getAccessToken() AccessTocken VK
- * @method string getUserId() User ID в системе VK
- * @method string getEmail() Email пользователя
  */
-class TokenCodeResponse extends Read implements TokenCodeResponseInterface
+class TokenCodeResponse implements TokenCodeResponseInterface
 {
-    /** Через сколько истекёт */
-    public const PROP_EXPIRES_IN = 'expiresIn';
+    /**
+     * @var string
+     */
+    private $token;
 
-    /** AccessTocken VK */
-    public const PROP_ACCESS_TOKEN = 'accessToken';
+    /**
+     * @var string
+     */
+    private $userId;
 
-    /** User ID в системе VK */
-    public const PROP_USER_ID = 'userId';
+    /**
+     * @var string
+     */
+    private $expiresIn;
 
-    /** Email пользователя */
-    public const PROP_EMAIL = 'email';
+    /**
+     * @var string
+     */
+    private $email;
+
+    /**
+     * TokenCodeResponse constructor.
+     * @param string $expiresIn
+     * @param string $token
+     * @param string $userId
+     * @param string $email
+     */
+    public function __construct(string $expiresIn, string $token, string $userId, string $email)
+    {
+        $this->token = $token;
+        $this->userId = $userId;
+        $this->expiresIn = $expiresIn;
+        $this->email = $email;
+    }
+
+    public function getAccessToken(): string
+    {
+        return $this->token;
+    }
+
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpiresIn(): string
+    {
+        return $this->expiresIn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
 }
