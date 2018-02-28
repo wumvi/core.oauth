@@ -77,9 +77,6 @@ class MailruService
         $response = $this->curl->call($request);
         $data = json_decode($response->getData(), true);
 
-        var_dump($data);
-        exit;
-
         if ($data === null || isset($data['error'])) {
             return null;
         }
