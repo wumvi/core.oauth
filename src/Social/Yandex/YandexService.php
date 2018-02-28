@@ -1,18 +1,19 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Yandex;
 
+use Core\OAuth\OAuthBase\Yandex\OAuthYandex;
 use LightweightCurl\Curl;
-use LightweightCurl\Request;
 use LightweightCurl\CurlException;
+use LightweightCurl\Request;
 
 /**
  * Class YandexService
  */
 class YandexService
 {
-    private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=';
+    private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=%s';
 
     /**
      * @var Curl Расширенный curl
@@ -20,11 +21,27 @@ class YandexService
     protected $curl;
 
     /**
-     * Yandex constructor.
+     * @var OAuthYandex
      */
-    public function __construct()
+    private $authYandex;
+
+    /**
+     * YandexService constructor.
+     *
+     * @param OAuthYandex $authYandex
+     */
+    public function __construct(OAuthYandex $authYandex)
     {
         $this->curl = new Curl();
+        $this->authYandex = $authYandex;
+    }
+
+    public function getLink(string $oauthId): string
+    {
+        $url = 'https://oauth.yandex.ru/authorize?response_type=code&client_id=' . $this->authYandex->getClientId();
+        $url .= '&state=' . $oauthId;
+
+        return $url;
     }
 
     /**

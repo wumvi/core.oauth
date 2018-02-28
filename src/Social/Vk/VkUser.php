@@ -37,7 +37,7 @@ class VkUser extends Read
      * Устанавливаем Email пользователя
      * @param string $email Email пользователя
      */
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
     }
@@ -46,7 +46,7 @@ class VkUser extends Read
      * Получаем Email пользователя
      * @return string Email пользователя
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }

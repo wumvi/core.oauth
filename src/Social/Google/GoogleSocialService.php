@@ -1,11 +1,12 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Google;
 
+use Core\OAuth\OAuthBase\Google\OAuthGoogle;
 use LightweightCurl\Curl;
-use LightweightCurl\Request;
 use LightweightCurl\CurlException;
+use LightweightCurl\Request;
 
 /**
  * @author Kozlenko Vitaliy
@@ -17,9 +18,25 @@ class GoogleSocialService
      */
     protected $curl;
 
-    public function __construct()
+    /**
+     * @var OAuthGoogle
+     */
+    private $authGoogle;
+
+    public function __construct(OAuthGoogle $authGoogle)
     {
         $this->curl = new Curl();
+        $this->authGoogle = $authGoogle;
+    }
+
+    public function getLink(string $redirectUri, string $oauthId): string
+    {
+        $url = 'https://accounts.google.com/o/oauth2/auth?redirect_uri=' . $redirectUri;
+        $url .= '&state=' . $oauthId;
+        $url .='&response_type=code&client_id=' . $this->authGoogle->getClientId();
+        $url .='&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile';
+
+        return $url;
     }
 
     /**
@@ -41,6 +58,7 @@ class GoogleSocialService
         if ($data === null) {
             return null;
         }
+
         return new GoogleUser([
             GoogleUser::PROP_ID => $data->id,
             GoogleUser::PROP_EMAIL => $data->email,

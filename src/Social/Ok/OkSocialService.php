@@ -1,11 +1,12 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Ok;
 
+use Core\OAuth\OAuthBase\Ok\OAuthOk;
 use LightweightCurl\Curl;
-use LightweightCurl\Request;
 use LightweightCurl\CurlException;
+use LightweightCurl\Request;
 
 /**
  * @author Kozlenko Vitaliy
@@ -20,27 +21,29 @@ class OkSocialService
      */
     protected $curl;
 
-    /** @var string ID приложения */
-    private $appId;
-
-    /** @var string Приватный ключ */
-    private $privateKey;
-
-    /** @var string Публичный ключ */
-    private $publicKey;
+    /**
+     * @var OAuthOk
+     */
+    private $authOk;
 
     /**
      * OkSocial constructor.
-     * @param string $appId ID приложения
-     * @param string $privateKey Приватный ключ
-     * @param string $publicKey Публичный ключ
+     *
+     * @param OAuthOk $authOk
      */
-    public function __construct(string $appId, string $privateKey, string $publicKey)
+    public function __construct(OAuthOk $authOk)
     {
         $this->curl = new Curl();
-        $this->appId = $appId;
-        $this->privateKey = $privateKey;
-        $this->publicKey = $publicKey;
+        $this->authOk = $authOk;
+    }
+
+    public function getLink(string $redirectUrl, string $oauthId): string
+    {
+        $url = 'https://connect.ok.ru/oauth/authorize?client_id=' . $this->authOk->getClientId();
+        $url .= '&response_type=code&redirect_uri=' . $redirectUrl;
+        $url .= '&scope=GET_EMAIL&state=' . $oauthId;
+
+        return $url;
     }
 
     /**
@@ -54,13 +57,13 @@ class OkSocialService
      */
     public function getUserInfo(string $authToken): ?OkUser
     {
-        $sign = md5($authToken . $this->privateKey);
-        $sing = md5('application_key=' . $this->publicKey . 'method=users.getCurrentUser' . $sign);
+        $sign = md5($authToken . $this->authOk->getClientSecret());
+        $sing = md5('application_key=' . $this->authOk->getPublicKey() . 'method=users.getCurrentUser' . $sign);
 
         $params = [
             'access_token' => $authToken,
             'method' => 'users.getCurrentUser',
-            'application_key' => $this->publicKey,
+            'application_key' => $this->authOk->getPublicKey(),
             'sig' => $sing
         ];
 

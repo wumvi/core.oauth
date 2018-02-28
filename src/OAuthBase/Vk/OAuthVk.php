@@ -24,4 +24,9 @@ class OAuthVk extends OAuthBase
             $data->email
         );
     }
+
+    public function getTokenUrl(): string
+    {
+        return 'https://oauth.vk.com/access_token';
+    }
 }

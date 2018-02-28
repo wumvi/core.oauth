@@ -1,44 +1,53 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Vk;
 
+use Core\OAuth\OAuthBase\Vk\OAuthVk;
 use LightweightCurl\Curl;
-use LightweightCurl\Request;
 use LightweightCurl\CurlException;
+use LightweightCurl\Request;
 
 /**
  * Сервис работы с API сайта ВКонтакте
  */
 class VkSocialService
 {
-    const URL_API = 'https://api.vk.com/method/';
+    private const URL_API = 'https://api.vk.com/method/';
 
     /**
      * @var Curl Расширенный curl
      */
     protected $curl;
 
-    /** @var string ID сайта */
-    protected $siteId;
-
-    /** @var string Секретный ключ */
-    protected $clientSecret;
+    /**
+     * @var OAuthVk
+     */
+    protected $authVk;
 
     /**
      * VkSocialService constructor.
-     * @param string $siteId ID сайта
-     * @param string $clientSecret Секретный ключ
+     *
+     * @param OAuthVk $authVk
      */
-    public function __construct(string $siteId, string $clientSecret)
+    public function __construct(OAuthVk $authVk)
     {
         $this->curl = new Curl();
-        $this->siteId = $siteId;
-        $this->clientSecret = $clientSecret;
+        $this->authVk = $authVk;
+    }
+
+    public function getLink($redirectUrl): string
+    {
+        $url = 'https://oauth.vk.com/authorize?client_id=' . $this->authVk->getClientId();
+        $url .= '&redirect_uri=' . $redirectUrl;
+        $url .= '&display=page&scope=4194304&response_type=code&v=5.52';
+
+        return $url;
     }
 
     /**
      * Получение информацию по пользователю
+     *
      * @param string $vkUserId Id пользователя сайта Вконтакте
      * @param string $accessToken AccessToken
      *
@@ -48,7 +57,7 @@ class VkSocialService
      *
      * @throws CurlException
      */
-    public function getUserInfo(string $vkUserId, string $accessToken): ?VkUser
+    public function getUserInfo(int $vkUserId, string $accessToken): ?VkUser
     {
         $params = [
             'user_id' => $vkUserId,

@@ -1,14 +1,14 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Mailru;
 
-use LightweightCurl\Curl;
-use LightweightCurl\Request;
-use LightweightCurl\CurlException;
-
-use Core\Utils\JsonToReadConverter;
+use Core\OAuth\OAuthBase\Mailru\OAuthMailRu;
 use Core\OAuth\OAuthBase\Mailru\TokenCodeResponse;
+use Core\Utils\JsonToReadConverter;
+use LightweightCurl\Curl;
+use LightweightCurl\CurlException;
+use LightweightCurl\Request;
 
 /**
  * @author Козленко В.Л.
@@ -24,19 +24,29 @@ class MailruService
      */
     protected $curl;
 
-    protected $siteId;
-    protected $clientSecret;
+    /**
+     * @var OAuthMailRu
+     */
+    protected $mailRuData;
 
     /**
      * MailruService constructor.
-     * @param string $siteId
-     * @param string $clientSecret
+     *
+     * @param OAuthMailRu $mailRuData
      */
-    public function __construct(string $siteId, string $clientSecret)
+    public function __construct(OAuthMailRu $mailRuData)
     {
         $this->curl = new Curl();
-        $this->siteId = $siteId;
-        $this->clientSecret = $clientSecret;
+        $this->mailRuData = $mailRuData;
+    }
+
+    public function getLink(string $redirectUrl): string
+    {
+        $url = 'https://connect.mail.ru/oauth/authorize?client_id=' . $this->mailRuData->getClientId();
+        // $url .= '&cope=widget&display=mobile';
+        $url .= '&response_type=code&redirect_uri=' . $redirectUrl;
+
+        return $url;
     }
 
     /**
@@ -46,11 +56,11 @@ class MailruService
      *
      * @throws CurlException
      */
-    public function getUserInfo($accessToken): ?MailRuUser
+    public function getUserInfo(TokenCodeResponse $accessToken): ?MailRuUser
     {
         // Ключи должны быть в алфавитном порядке, это крайне важно!
         $params = [
-            'app_id' => $this->siteId,
+            'app_id' => $this->mailRuData->getClientId(),
             'method' => 'users.getInfo',
             'secure' => '1',
             'session_key' => $accessToken->getAccessToken()
@@ -58,13 +68,18 @@ class MailruService
 
         $params['sig'] = $this->createSign($params);
 
+
         $request = new Request();
         $request->setUrl(self::URL_API);
         $request->setData($params);
         $request->setMethod(Request::METHOD_POST);
 
-        $data = $this->curl->call($request);
-        $data = json_decode($data, true);
+        $response = $this->curl->call($request);
+        $data = json_decode($response->getData(), true);
+
+        var_dump($data);
+        exit;
+
         if ($data === null || isset($data['error'])) {
             return null;
         }
@@ -89,6 +104,6 @@ class MailruService
      */
     protected function createSign($params)
     {
-        return md5(http_build_query($params) . $this->clientSecret);
+        return md5(http_build_query($params, '', '') . $this->mailRuData->getClientSecret());
     }
 }
