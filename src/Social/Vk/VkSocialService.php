@@ -14,6 +14,8 @@ use LightweightCurl\Request;
 class VkSocialService
 {
     private const URL_API = 'https://api.vk.com/method/';
+    
+    private const VERSION = '5.8';
 
     /**
      * @var Curl Расширенный curl
@@ -61,7 +63,7 @@ class VkSocialService
     {
         $params = [
             'user_id' => $vkUserId,
-            'vk' => '5.8',
+            'version' => self::VERSION,
             'access_token' => $accessToken,
             'fields' => 'sex,bdate',
         ];
