@@ -21,7 +21,7 @@ class OAuthVk extends OAuthBase
             $data->expires_in,
             $data->access_token,
             $data->user_id,
-            $data->email
+            $data->email ?: ''
         );
     }
 
