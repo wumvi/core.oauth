@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Core\OAuth\Social\Mailru;
 
 use LightweightCurl\Curl;
+use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 use LightweightCurl\CurlException;
 
@@ -15,26 +16,28 @@ use Core\OAuth\OAuthBase\Mailru\TokenCodeResponse;
  * @see http://api.mail.ru/docs/guides/oauth/sites/
  * @see http://habrahabr.ru/company/mailru/blog/115163/
  */
-class MailruService
+class MailruService implements MailruServiceInterface
 {
     const URL_API = 'http://www.appsmail.ru/platform/api';
 
     /**
-     * @var Curl Расширенный curl
+     * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
     protected $siteId;
+
     protected $clientSecret;
 
     /**
      * MailruService constructor.
      * @param string $siteId
      * @param string $clientSecret
+     * @param CurlInterface $curl
      */
-    public function __construct(string $siteId, string $clientSecret)
+    public function __construct(string $siteId, string $clientSecret, CurlInterface $curl)
     {
-        $this->curl = new Curl();
+        $this->curl = $curl;
         $this->siteId = $siteId;
         $this->clientSecret = $clientSecret;
     }
@@ -42,11 +45,11 @@ class MailruService
     /**
      * @param TokenCodeResponse $accessToken
      *
-     * @return MailRuUser|null Массив моделей пользователей
+     * @return MailRuUserInterface|null Массив моделей пользователей
      *
-     * @throws CurlException
+     * @throws
      */
-    public function getUserInfo($accessToken): ?MailRuUser
+    public function getUserInfo($accessToken): ?MailRuUserInterface
     {
         // Ключи должны быть в алфавитном порядке, это крайне важно!
         $params = [
@@ -72,7 +75,7 @@ class MailruService
         $jsonMapping = new JsonToReadConverter([
             MailRuUser::PROP_BIRTHDAY => 'birthday',
             MailRuUser::PROP_EMAIL => 'email',
-            MailRuUser::PROP_UID => 'uid',
+            MailRuUser::PROP_ID => 'uid',
             MailRuUser::PROP_LAST_NAME => 'last_name',
             MailRuUser::PROP_SEX => 'sex',
             MailRuUser::PROP_FIRST_NAME => 'first_name',

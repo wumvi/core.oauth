@@ -1,0 +1,50 @@
+  curl:
+    class: \LightweightCurl\Curl
+
+  oauth2.mailru:
+    class: \Core\OAuth\OAuthBase\Mailru\OAuthMailRu
+    param: [736936, 'b5e94da57d9d7ef536e2c31460c89b96']
+
+  social.mailru.service:
+    class: \Core\OAuth\Social\Mailru\MailruService
+    param: ['@oauth2.mailru', '@curl']
+
+  oauth2.vk:
+    class: \Core\OAuth\OAuthBase\Vk\OAuthVk
+    param: [5051972, 'FMITk8ugvgIR5KssKLEI']
+
+  social.vk.service:
+    class: \Core\OAuth\Social\Vk\VkSocialService
+    param: ['@oauth2.vk', '@curl']
+
+  oauth2.yandex:
+    class: \Core\OAuth\OAuthBase\Yandex\OAuthYandex
+    param: ['4f306e7f5b974458b89ce1346131571a', 'd2f2da589dd34b6fb42a1849a412aacd']
+
+  social.yandex.service:
+    class: \Core\OAuth\Social\Yandex\YandexService
+    param: ['@oauth2.yandex', '@curl']
+
+  oauth2.ok:
+    class: \Core\OAuth\OAuthBase\Ok\OAuthOk
+    param: [1152562176, 'AFEF49B88235BAC0558B0086', 'CBAFLDLFEBABABABA']
+
+  social.ok.service:
+    class: \Core\OAuth\Social\Ok\OkSocialService
+    param: ['@oauth2.ok', '@curl']
+
+  oauth2.facebook:
+    class: \Core\OAuth\OAuthBase\Facebook\OAuthFacebook
+    param: [2528021327422436, '72509eded96868c115c319356e22d8c2']
+
+  social.facebook.service:
+    class: \Core\OAuth\Social\Facebook\FbSocialService
+    param: ['@oauth2.facebook', '@curl']
+
+  oauth2.google:
+    class: \Core\OAuth\OAuthBase\Google\OAuthGoogle
+    param: ['1017421105231-ro9k5koc3solrgfmsbn1d6j1789ko552.apps.googleusercontent.com', 'Df8La2MqOUgeYf9QwmGdW_oX']
+
+  social.google.service:
+    class: \Core\OAuth\Social\Google\GoogleSocialService
+    param: ['@oauth2.google', '@curl']

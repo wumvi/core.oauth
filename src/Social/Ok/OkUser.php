@@ -3,17 +3,10 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Ok;
 
-use Core\Model\Read;
-
 /**
  * Модель пользователя сайта Одноклассники
- * @method string getId() ID пользователя
- * @method string getFirstName() Имя пользователя
- * @method string getLastName() Фамилия пользователя
- * @method string getBirthday() День рождения пользователя
- * @method string getSex() Пол пользователя
  */
-class OkUser extends Read
+class OkUser implements OkUserInterface
 {
     /** Id пользователя */
     const PROP_ID = 'id';
@@ -36,12 +29,54 @@ class OkUser extends Read
     /** Пол пользователя */
     const PROP_SEX = 'sex';
 
+    private $id;
+    private $firstName;
+    private $lastName;
+    private $email;
+    private $birthday;
+    private $sex;
+
+    public function __construct(array $raw)
+    {
+        $this->id = $raw[self::PROP_ID];
+        $this->firstName = $raw[self::PROP_FIRST_NAME];
+        $this->lastName = $raw[self::PROP_LAST_NAME];
+        $this->email = $raw[self::PROP_HAS_EMAIL] ? $raw[self::PROP_EMAIL] : '';
+        $this->birthday = $raw[self::PROP_BIRTHDAY];
+        $this->sex = $raw[self::PROP_SEX];
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function getBirthday(): string
+    {
+        return $this->birthday;
+    }
+
     /**
      * Получаем Email пользователя, если он есть
-     * @return string|null Email пользователя
+     * @return string Email пользователя
      */
-    public function getEmail()
+    public function getEmail(): string
     {
-        return $this->list[self::PROP_HAS_EMAIL] ? $this->list[self::PROP_EMAIL] : null;
+        return $this->email;
+    }
+
+    public function getSex(): string
+    {
+        return $this->sex;
     }
 }

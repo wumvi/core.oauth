@@ -3,22 +3,21 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Facebook;
 
-use LightweightCurl\Curl;
+use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
-use LightweightCurl\CurlException;
 
 /**
  * Сервис для Facebook
  * @author Kozlenko Vitaliy
  * @see https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Dwebsite%2Cbirthday&version=v2.6
  */
-class FbSocialService
+class FbSocialService implements FbSocialServiceInterface
 {
     private const URL_API = 'https://graph.facebook.com/me?fields=' .
     'birthday,website,email,first_name,last_name,gender&access_token=%s';
 
     /**
-     * @var Curl Расширенный curl
+     * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
@@ -34,12 +33,14 @@ class FbSocialService
 
     /**
      * FbSocialService constructor.
+     *
      * @param string $appId ID приложения
      * @param string $privateKey Приватный ключ
+     * @param CurlInterface $curl
      */
-    public function __construct(string $appId, string $privateKey)
+    public function __construct(string $appId, string $privateKey, CurlInterface $curl)
     {
-        $this->curl = new Curl();
+        $this->curl = $curl;
         $this->appId = $appId;
         $this->privateKey = $privateKey;
     }
@@ -49,13 +50,13 @@ class FbSocialService
      *
      * @param string $authToken Токен после авторизации
      *
-     * @return FbUser|null Модель пользователя
+     * @return FbUserInterface|null Модель пользователя
      *
      * @see https://developers.facebook.com/docs/graph-api/reference/user
      *
-     * @throws CurlException
+     * @throws
      */
-    public function getUserInfo(string $authToken): ?FbUser
+    public function getUserInfo(string $authToken): ?FbUserInterface
     {
         $url = vsprintf(self::URL_API, [$authToken,]);
 

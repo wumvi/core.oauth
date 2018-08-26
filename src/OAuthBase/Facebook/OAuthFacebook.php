@@ -4,26 +4,30 @@ declare(strict_types=1);
 namespace Core\OAuth\OAuthBase\Facebook;
 
 use Core\OAuth\OAuthBase\OAuthBase;
+use Core\OAuth\OAuthBase\OAuthBaseInterface;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 use LightweightCurl\Request;
 
 /**
  * Управление OAuth авторизацией для сайта Facebook
  */
-class OAuthFacebook extends OAuthBase
+class OAuthFacebook extends OAuthBase implements OAuthBaseInterface
 {
     /**
      * @inheritdoc
      */
-    protected function getTokenCodeResponse($data): TokenCodeResponseInterface
+    public function getTokenCodeResponse($data): TokenCodeResponseInterface
     {
         // Dummy method. Only for override method
     }
 
     /**
      * @param string $code Код от редиректа
-     * @param string $redirectUri Страница редиректа. *По факту не используемый параметр для запроса
+     * @param string $redirectUri Страница редиректа. По факту не используемый параметр для запроса
+     *
      * @return TokenCodeResponseInterface|null Ответ сервера
+     *
+     * @throws
      */
     public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
     {

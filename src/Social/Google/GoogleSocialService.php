@@ -3,33 +3,30 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Google;
 
-use LightweightCurl\Curl;
+use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
-use LightweightCurl\CurlException;
 
 /**
  * @author Kozlenko Vitaliy
  */
-class GoogleSocialService
+class GoogleSocialService implements GoogleSocialServiceInterface
 {
     /**
-     * @var Curl Расширенный curl
+     * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
-    public function __construct()
+    public function __construct(CurlInterface $curl)
     {
-        $this->curl = new Curl();
+        $this->curl = $curl;
     }
 
     /**
      * @param string $accessToken
      *
-     * @return GoogleUser|null
-     *
-     * @throws CurlException
+     * @return GoogleUserInterface|null
      */
-    public function getUserInfo(string $accessToken): ?GoogleUser
+    public function getUserInfo(string $accessToken): ?GoogleUserInterface
     {
         $url = vsprintf('https://www.googleapis.com/oauth2/v1/userinfo?access_token=%s', [$accessToken,]);
 

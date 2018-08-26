@@ -3,19 +3,18 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Vk;
 
-use LightweightCurl\Curl;
+use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
-use LightweightCurl\CurlException;
 
 /**
  * Сервис работы с API сайта ВКонтакте
  */
-class VkSocialService
+class VkSocialService implements VkSocialServiceInterface
 {
     const URL_API = 'https://api.vk.com/method/';
 
     /**
-     * @var Curl Расширенный curl
+     * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
@@ -27,12 +26,14 @@ class VkSocialService
 
     /**
      * VkSocialService constructor.
+     *
      * @param string $siteId ID сайта
      * @param string $clientSecret Секретный ключ
+     * @param CurlInterface $curl
      */
-    public function __construct(string $siteId, string $clientSecret)
+    public function __construct(string $siteId, string $clientSecret, CurlInterface $curl)
     {
-        $this->curl = new Curl();
+        $this->curl = $curl;
         $this->siteId = $siteId;
         $this->clientSecret = $clientSecret;
     }
@@ -44,11 +45,11 @@ class VkSocialService
      *
      * @see https://vk.com/dev/users.get
      *
-     * @return VkUser|null
+     * @return VkUserInterface|null
      *
-     * @throws CurlException
+     * @throws
      */
-    public function getUserInfo(string $vkUserId, string $accessToken): ?VkUser
+    public function getUserInfo(string $vkUserId, string $accessToken): ?VkUserInterface
     {
         $params = [
             'user_id' => $vkUserId,

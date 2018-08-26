@@ -3,17 +3,10 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Vk;
 
-use Core\Model\Read;
-
 /**
  * Модель пользователя VK
- * @method string getBirthday() Получаем День рождения пользователя
- * @method string getId() Получаем ID пользователя
- * @method string getLastName() Получаем фамилия пользователя
- * @method int getSex() Получаем пол пользователя
- * @method string getFirstName() Получаем имя пользователя
  */
-class VkUser extends Read
+class VkUser implements VkUserInterface
 {
     /** Id пользователя */
     const PROP_ID = 'id';
@@ -32,12 +25,26 @@ class VkUser extends Read
 
     /** @var string Email пользователя */
     private $email = '';
+    private $id;
+    private $firstName;
+    private $lastName;
+    private $birthday;
+    private $sex;
+
+    public function __construct(array $raw)
+    {
+        $this->id = $raw[self::PROP_ID];
+        $this->firstName = $raw[self::PROP_FIRST_NAME];
+        $this->lastName = $raw[self::PROP_LAST_NAME];
+        $this->birthday = $raw[self::PROP_BIRTHDAY];
+        $this->sex = $raw[self::PROP_SEX];
+    }
 
     /**
      * Устанавливаем Email пользователя
      * @param string $email Email пользователя
      */
-    public function setEmail($email)
+    public function setEmail($email): void
     {
         $this->email = $email;
     }
@@ -46,8 +53,33 @@ class VkUser extends Read
      * Получаем Email пользователя
      * @return string Email пользователя
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function getBirthday(): string
+    {
+        return $this->birthday;
+    }
+
+    public function getSex(): string
+    {
+        return $this->sex;
     }
 }

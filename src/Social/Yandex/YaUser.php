@@ -3,18 +3,10 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Yandex;
 
-use Core\Model\Read;
-
 /**
  * Модель пользователя сайта Яндекс
- * @method string getFirstName() Имя пользователя
- * @method string getEmail() Email Пользователя
- * @method string getId() Id пользователя
- * @method string getLastName() Фамилия пользователя
- * @method string getBirthday() День рождения пользователя
- * @method string getSex() Пол пользователя: female
  */
-class YaUser extends Read
+class YaUser implements YaUserInterface
 {
     /** Имя пользователя */
     const PROP_FIRST_NAME = 'firstName';
@@ -33,4 +25,51 @@ class YaUser extends Read
 
     /** Пол пользователя */
     const PROP_SEX = 'sex';
+
+    private $id;
+    private $firstName;
+    private $lastName;
+    private $email;
+    private $birthday;
+    private $sex;
+
+    public function __construct(array $raw)
+    {
+        $this->id = $raw[self::PROP_ID];
+        $this->firstName = $raw[self::PROP_FIRST_NAME];
+        $this->lastName = $raw[self::PROP_LAST_NAME];
+        $this->email = $raw[self::PROP_EMAIL];
+        $this->birthday = $raw[self::PROP_BIRTHDAY];
+        $this->sex = $raw[self::PROP_SEX];
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getBirthday(): string
+    {
+        return $this->birthday;
+    }
+
+    public function getSex(): string
+    {
+        return $this->sex;
+    }
 }

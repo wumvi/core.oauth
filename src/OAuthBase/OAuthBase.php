@@ -45,6 +45,7 @@ abstract class OAuthBase
 
     /**
      * @param mixed $data Данные
+     *
      * @return TokenCodeResponseInterface
      */
     abstract protected function getTokenCodeResponse($data): TokenCodeResponseInterface;
@@ -54,7 +55,10 @@ abstract class OAuthBase
      *
      * @param string $code Код от редиректа
      * @param string $redirectUri Страница редиректа. *По факту не используемый параметр для запроса
+     *
      * @return TokenCodeResponseInterface|null Ответ сервера
+     *
+     * @throws
      */
     public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
     {
@@ -79,7 +83,10 @@ abstract class OAuthBase
 
     /**
      * @param $refreshToken
+     *
      * @return TokenCodeResponseInterface|null
+     *
+     * @throws
      */
     public function getRefreshTokenCode($refreshToken): ?TokenCodeResponseInterface
     {
