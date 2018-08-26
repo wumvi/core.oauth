@@ -45,8 +45,8 @@ class MailruService implements MailruServiceInterface
 
     public function getLink(string $redirectUrl): string
     {
-        $url = 'https://connect.mail.ru/oauth/authorize?client_id=' . $this->mailRuData->getClientId();
-        // $url .= '&cope=widget&display=mobile';
+        $url = 'https://connect.mail.ru/oauth/authorize?';
+        $url .= 'client_id=' . $this->mailRuData->getClientId();
         $url .= '&response_type=code&redirect_uri=' . $redirectUrl;
 
         return $url;

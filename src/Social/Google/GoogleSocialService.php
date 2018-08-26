@@ -32,8 +32,8 @@ class GoogleSocialService implements GoogleSocialServiceInterface
     {
         $url = 'https://accounts.google.com/o/oauth2/auth?redirect_uri=' . $redirectUri;
         $url .= '&state=' . $oauthId;
-        $url .='&response_type=code&client_id=' . $this->authGoogle->getClientId();
-        $url .='&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile';
+        $url .= '&response_type=code&client_id=' . $this->authGoogle->getClientId();
+        $url .= '&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile';
 
         return $url;
     }

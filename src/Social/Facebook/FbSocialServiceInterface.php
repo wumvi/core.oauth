@@ -15,5 +15,5 @@ interface FbSocialServiceInterface
      * @see https://developers.facebook.com/docs/graph-api/reference/user
      */
     public function getUserInfo(string $authToken): ?FbUserInterface;
-    public function getLink(string $redirectUrl): string;
+    public function getLink(string $redirectUrl, string $oauthId): string;
 }

@@ -40,10 +40,11 @@ class FbSocialService implements FbSocialServiceInterface
         $this->oauthFacebook = $authFacebook;
     }
 
-    public function getLink(string $redirectUrl): string
+    public function getLink(string $redirectUrl, string $oauthId): string
     {
         $url = 'https://www.facebook.com/dialog/oauth?client_id=' . $this->oauthFacebook->getClientId();
         $url .= '&redirect_uri=' . $redirectUrl;
+        $url .= '&state=' . $oauthId;
         $url .= '&response_type=code&scope=email';
 
         return $url;

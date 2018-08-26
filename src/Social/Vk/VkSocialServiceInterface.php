@@ -22,5 +22,5 @@ interface VkSocialServiceInterface
      */
     public function getUserInfo(int $userId, string $accessToken): ?VkUserInterface;
 
-    public function getLink(string $redirectUrl): string;
+    public function getLink(string $redirectUrl, string $scope): string;
 }

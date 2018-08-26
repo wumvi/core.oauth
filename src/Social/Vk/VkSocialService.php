@@ -38,11 +38,13 @@ class VkSocialService implements VkSocialServiceInterface
         $this->authVk = $authVk;
     }
 
-    public function getLink(string $redirectUrl): string
+    public function getLink(string $redirectUrl, string $scope): string
     {
-        $url = 'https://oauth.vk.com/authorize?client_id=' . $this->authVk->getClientId();
+        $url = 'https://oauth.vk.com/authorize?';
+        $url .= 'client_id=' . $this->authVk->getClientId();
         $url .= '&redirect_uri=' . $redirectUrl;
-        $url .= '&display=page&scope=4194304&response_type=code&v=5.52';
+        $url .= '&display=page&scope=' . $scope;
+        $url .= '&response_type=code&v=5.52';
 
         return $url;
     }

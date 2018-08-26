@@ -43,7 +43,8 @@ class OkSocialService implements OkSocialServiceInterface
 
     public function getLink(string $redirectUrl, string $oauthId): string
     {
-        $url = 'https://connect.ok.ru/oauth/authorize?client_id=' . $this->authOk->getClientId();
+        $url = 'https://connect.ok.ru/oauth/authorize?';
+        $url .= 'client_id=' . $this->authOk->getClientId();
         $url .= '&response_type=code&redirect_uri=' . $redirectUrl;
         $url .= '&scope=GET_EMAIL&state=' . $oauthId;
 

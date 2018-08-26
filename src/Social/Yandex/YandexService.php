@@ -38,7 +38,8 @@ class YandexService implements YandexServiceInterface
 
     public function getLink(string $oauthId): string
     {
-        $url = 'https://oauth.yandex.ru/authorize?response_type=code&client_id=' . $this->authYandex->getClientId();
+        $url = 'https://oauth.yandex.ru/authorize?response_type=code';
+        $url .= '&client_id=' . $this->authYandex->getClientId();
         $url .= '&state=' . $oauthId;
 
         return $url;
