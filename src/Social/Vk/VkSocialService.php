@@ -50,7 +50,7 @@ class VkSocialService implements VkSocialServiceInterface
     /**
      * Получение информацию по пользователю
      *
-     * @param string $vkUserId Id пользователя сайта Вконтакте
+     * @param int $userId Id пользователя сайта Вконтакте
      * @param string $accessToken AccessToken
      *
      * @see https://vk.com/dev/users.get
@@ -59,10 +59,10 @@ class VkSocialService implements VkSocialServiceInterface
      *
      * @throws
      */
-    public function getUserInfo(string $vkUserId, string $accessToken): ?VkUserInterface
+    public function getUserInfo(int $userId, string $accessToken): ?VkUserInterface
     {
         $params = [
-            'user_id' => $vkUserId,
+            'user_id' => $userId,
             'version' => self::VERSION,
             'access_token' => $accessToken,
             'fields' => 'sex,bdate',

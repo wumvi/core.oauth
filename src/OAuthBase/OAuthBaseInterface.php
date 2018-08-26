@@ -32,4 +32,8 @@ interface OAuthBaseInterface
      * @throws
      */
     public function getRefreshTokenCode($refreshToken): ?TokenCodeResponseInterface;
+
+    public function getClientId(): string;
+
+    public function getClientSecret(): string;
 }

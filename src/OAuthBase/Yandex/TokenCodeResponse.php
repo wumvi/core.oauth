@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\OAuthBase\Yandex;
 
-use Core\Model\Read;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 
 /**

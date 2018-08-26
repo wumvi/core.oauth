@@ -6,7 +6,6 @@ namespace Core\OAuth\OAuthBase\Ok;
 use Core\OAuth\OAuthBase\OAuthBase;
 use Core\OAuth\OAuthBase\OAuthBaseInterface;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
-use LightweightCurl\CurlException;
 use LightweightCurl\Request;
 
 /**
@@ -54,8 +53,8 @@ class OAuthOk extends OAuthBase implements OAuthBaseInterface
      * @param string $redirectUri
      *
      * @return TokenCodeResponseInterface|null
-     * @throws \Exception
-     * @throws CurlException
+     *
+     * @throws
      */
     public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
     {

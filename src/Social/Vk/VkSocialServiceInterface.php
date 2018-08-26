@@ -13,14 +13,14 @@ interface VkSocialServiceInterface
 {
     /**
      * Получение информацию по пользователю
-     * @param string $vkUserId Id пользователя сайта Вконтакте
+     * @param int $userId Id пользователя сайта Вконтакте
      * @param string $accessToken AccessToken
      *
      * @see https://vk.com/dev/users.get
      *
      * @return VkUserInterface|null
      */
-    public function getUserInfo(string $vkUserId, string $accessToken): ?VkUserInterface;
+    public function getUserInfo(int $userId, string $accessToken): ?VkUserInterface;
 
     public function getLink(string $redirectUrl): string;
 }
