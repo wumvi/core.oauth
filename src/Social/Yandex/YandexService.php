@@ -4,19 +4,18 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Yandex;
 
 use Core\OAuth\OAuthBase\Yandex\OAuthYandex;
-use LightweightCurl\Curl;
-use LightweightCurl\CurlException;
+use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
 /**
  * Class YandexService
  */
-class YandexService
+class YandexService implements YandexServiceInterface
 {
     private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=%s';
 
     /**
-     * @var Curl Расширенный curl
+     * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
@@ -29,10 +28,11 @@ class YandexService
      * YandexService constructor.
      *
      * @param OAuthYandex $authYandex
+     * @param CurlInterface $curl
      */
-    public function __construct(OAuthYandex $authYandex)
+    public function __construct(OAuthYandex $authYandex, CurlInterface $curl)
     {
-        $this->curl = new Curl();
+        $this->curl = $curl;
         $this->authYandex = $authYandex;
     }
 
@@ -47,11 +47,11 @@ class YandexService
     /**
      * @param string $authToken
      *
-     * @return YaUser|null
+     * @return YaUserInterface|null
      *
-     * @throws CurlException
+     * @throws
      */
-    public function getUserInfo(string $authToken): ?YaUser
+    public function getUserInfo(string $authToken): ?YaUserInterface
     {
         $url = vsprintf(self::URL_API, [$authToken,]);
 

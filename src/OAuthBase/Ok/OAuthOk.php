@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core\OAuth\OAuthBase\Ok;
 
 use Core\OAuth\OAuthBase\OAuthBase;
+use Core\OAuth\OAuthBase\OAuthBaseInterface;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
 use LightweightCurl\CurlException;
 use LightweightCurl\Request;
@@ -11,7 +12,7 @@ use LightweightCurl\Request;
 /**
  * Управление OAuth авторизацией для сайта Однокласники
  */
-class OAuthOk extends OAuthBase
+class OAuthOk extends OAuthBase implements OAuthBaseInterface
 {
     /**
      * @var string
@@ -38,7 +39,7 @@ class OAuthOk extends OAuthBase
      *
      * @return TokenCodeResponseInterface Модель токена
      */
-    protected function getTokenCodeResponse($dataRaw): TokenCodeResponseInterface
+    public function getTokenCodeResponse($dataRaw): TokenCodeResponseInterface
     {
         return new TokenCodeResponse($dataRaw->access_token);
     }

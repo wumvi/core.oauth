@@ -7,17 +7,20 @@ use Core\OAuth\OAuthBase\Ok\OAuthOk;
 use LightweightCurl\Curl;
 use LightweightCurl\CurlException;
 use LightweightCurl\Request;
+use LightweightCurl\CurlInterface;
+
 
 /**
  * @author Kozlenko Vitaliy
+ *
  * @see http://coddism.com/php/oauth_avtorizacija_cherez_odnoklassnikiru
  */
-class OkSocialService
+class OkSocialService implements OkSocialServiceInterface
 {
     private const URL_API = 'http://api.odnoklassniki.ru/fb.do?%s';
 
     /**
-     * @var Curl Расширенный curl
+     * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
@@ -30,10 +33,11 @@ class OkSocialService
      * OkSocial constructor.
      *
      * @param OAuthOk $authOk
+     * @param CurlInterface $curl
      */
-    public function __construct(OAuthOk $authOk)
+    public function __construct(OAuthOk $authOk, CurlInterface $curl)
     {
-        $this->curl = new Curl();
+        $this->curl = $curl;
         $this->authOk = $authOk;
     }
 
@@ -51,11 +55,11 @@ class OkSocialService
      *
      * @param string $authToken AuthToken
      *
-     * @return OkUser|null
+     * @return OkUserInterface|null
      *
-     * @throws CurlException
+     * @throws
      */
-    public function getUserInfo(string $authToken): ?OkUser
+    public function getUserInfo(string $authToken): ?OkUserInterface
     {
         $sign = md5($authToken . $this->authOk->getClientSecret());
         $sing = md5('application_key=' . $this->authOk->getPublicKey() . 'method=users.getCurrentUser' . $sign);

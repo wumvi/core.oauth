@@ -59,6 +59,8 @@ abstract class OAuthBase
      *
      * @return TokenCodeResponseInterface|null Ответ сервера
      *
+     * @throws
+     *
      * @throws CurlException
      * @throws \Exception
      */
@@ -92,7 +94,7 @@ abstract class OAuthBase
      *
      * @return TokenCodeResponseInterface|null
      *
-     * @throws CurlException
+     * @throws
      */
     public function getRefreshTokenCode($refreshToken): ?TokenCodeResponseInterface
     {

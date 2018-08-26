@@ -3,18 +3,10 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Mailru;
 
-use Core\Model\Read;
-
 /**
  * Модель пользователя сайта Mail.ru
- * @method string getBirthday() Получаем День рождения пользователя
- * @method string getEmail() Получаем Email пользователя
- * @method int getId() Получаем ID пользователя
- * @method string getLastName() Получаем фамилия пользователя
- * @method int getSex() Получаем пол пользователя
- * @method string getFirstName() Получаем имя пользователя
  */
-class MailRuUser extends Read
+class MailRuUser implements MailRuUserInterface
 {
     /** День рождения пользователя */
     const PROP_BIRTHDAY = 'birthday';
@@ -23,7 +15,7 @@ class MailRuUser extends Read
     const PROP_EMAIL  = 'email';
 
     /** ID пользователя */
-    const PROP_UID  = 'id';
+    const PROP_ID  = 'id';
 
     /** Фамилия пользователя */
     const PROP_LAST_NAME  = 'lastName';
@@ -33,4 +25,51 @@ class MailRuUser extends Read
 
     /** Имя пользователя */
     const PROP_FIRST_NAME  = 'firstName';
+
+    private $id;
+    private $firstName;
+    private $lastName;
+    private $email;
+    private $birthday;
+    private $sex;
+
+    public function __construct(array $raw)
+    {
+        $this->id = $raw[self::PROP_ID];
+        $this->firstName = $raw[self::PROP_FIRST_NAME];
+        $this->lastName = $raw[self::PROP_LAST_NAME];
+        $this->email = $raw[self::PROP_EMAIL];
+        $this->birthday = $raw[self::PROP_BIRTHDAY];
+        $this->sex = $raw[self::PROP_SEX];
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getBirthday(): string
+    {
+        return $this->birthday;
+    }
+
+    public function getSex(): string
+    {
+        return $this->sex;
+    }
 }

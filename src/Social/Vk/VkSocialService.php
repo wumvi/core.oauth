@@ -4,21 +4,20 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Vk;
 
 use Core\OAuth\OAuthBase\Vk\OAuthVk;
-use LightweightCurl\Curl;
-use LightweightCurl\CurlException;
+use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
 /**
  * Сервис работы с API сайта ВКонтакте
  */
-class VkSocialService
+class VkSocialService implements VkSocialServiceInterface
 {
     private const URL_API = 'https://api.vk.com/method/';
-    
+
     private const VERSION = '5.8';
 
     /**
-     * @var Curl Расширенный curl
+     * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
@@ -31,14 +30,15 @@ class VkSocialService
      * VkSocialService constructor.
      *
      * @param OAuthVk $authVk
+     * @param CurlInterface $curl
      */
-    public function __construct(OAuthVk $authVk)
+    public function __construct(OAuthVk $authVk, CurlInterface $curl)
     {
-        $this->curl = new Curl();
+        $this->curl = $curl;
         $this->authVk = $authVk;
     }
 
-    public function getLink($redirectUrl): string
+    public function getLink(string $redirectUrl): string
     {
         $url = 'https://oauth.vk.com/authorize?client_id=' . $this->authVk->getClientId();
         $url .= '&redirect_uri=' . $redirectUrl;
@@ -55,11 +55,11 @@ class VkSocialService
      *
      * @see https://vk.com/dev/users.get
      *
-     * @return VkUser|null
+     * @return VkUserInterface|null
      *
-     * @throws CurlException
+     * @throws
      */
-    public function getUserInfo(int $vkUserId, string $accessToken): ?VkUser
+    public function getUserInfo(string $vkUserId, string $accessToken): ?VkUserInterface
     {
         $params = [
             'user_id' => $vkUserId,

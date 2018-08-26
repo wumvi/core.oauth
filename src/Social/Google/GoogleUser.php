@@ -3,17 +3,10 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Google;
 
-use Core\Model\Read;
-
 /**
  * Модель пользователя сайта Google.com
- * @method string getId() Id пользователя
- * @method string getEmail() Email пользователя
- * @method string getFirstName() Имя пользователя
- * @method string getLastName() Фамилия пользователя
- * @method string getSex() Пол пользователя
  */
-class GoogleUser extends Read
+class GoogleUser implements GoogleUserInterface
 {
     /** Id пользователя */
     const PROP_ID = 'id';
@@ -29,4 +22,44 @@ class GoogleUser extends Read
 
     /** Пол пользователя */
     const PROP_SEX = 'sex';
+
+    private $id;
+    private $firstName;
+    private $lastName;
+    private $email;
+    private $sex;
+
+    public function __construct(array $raw)
+    {
+        $this->id = $raw[self::PROP_ID];
+        $this->firstName = $raw[self::PROP_FIRST_NAME];
+        $this->lastName = $raw[self::PROP_LAST_NAME];
+        $this->email = $raw[self::PROP_EMAIL];
+        $this->sex = $raw[self::PROP_SEX];
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getSex(): string
+    {
+        return $this->sex;
+    }
 }
