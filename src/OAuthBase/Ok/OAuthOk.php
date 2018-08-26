@@ -5,7 +5,8 @@ namespace Core\OAuth\OAuthBase\Ok;
 
 use Core\OAuth\OAuthBase\OAuthBase;
 use Core\OAuth\OAuthBase\OAuthBaseInterface;
-use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
+use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
 /**
@@ -18,9 +19,9 @@ class OAuthOk extends OAuthBase implements OAuthBaseInterface
      */
     private $publicKey;
 
-    public function __construct(string $clientId, string $clientSecret, string $publicKey)
+    public function __construct(string $clientId, string $clientSecret, string $publicKey, CurlInterface $curl)
     {
-        parent::__construct($clientId, $clientSecret);
+        parent::__construct($clientId, $clientSecret, $curl);
         $this->publicKey = $publicKey;
     }
 
