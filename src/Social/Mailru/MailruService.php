@@ -53,13 +53,14 @@ class MailruService implements MailruServiceInterface
     }
 
     /**
-     * @param TokenCodeResponseInterface $accessToken
+     * @param string $accessToken
+     * @param string $userId
      *
      * @return MailRuUserInterface|null Массив моделей пользователей
      *
      * @throws
      */
-    public function getUserInfo(TokenCodeResponseInterface $accessToken): ?MailRuUserInterface
+    public function getUserInfo(string $accessToken, string $userId): ?MailRuUserInterface
     {
         // Ключи должны быть в алфавитном порядке, это крайне важно!
         $params = [
