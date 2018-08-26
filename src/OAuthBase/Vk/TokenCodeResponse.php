@@ -32,12 +32,13 @@ class TokenCodeResponse implements TokenCodeResponseInterface
 
     /**
      * TokenCodeResponse constructor.
-     * @param string $expiresIn
+     *
+     * @param int $expiresIn
      * @param string $token
-     * @param string $userId
+     * @param int $userId
      * @param string $email
      */
-    public function __construct(string $expiresIn, string $token, string $userId, string $email)
+    public function __construct(int $expiresIn, string $token, int $userId, string $email)
     {
         $this->token = $token;
         $this->userId = $userId;
@@ -45,20 +46,26 @@ class TokenCodeResponse implements TokenCodeResponseInterface
         $this->email = $email;
     }
 
+    /**
+     * @return string
+     */
     public function getAccessToken(): string
     {
         return $this->token;
     }
 
-    public function getUserId(): string
+    /**
+     * @return int
+     */
+    public function getUserId(): int
     {
         return $this->userId;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getExpiresIn(): string
+    public function getExpiresIn(): int
     {
         return $this->expiresIn;
     }

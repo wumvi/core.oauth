@@ -21,3 +21,31 @@ git clone https://github.com/wumvi/core.oauth.git
 ```
 
 ### Composer update
+
+### Oauth
+
+#### Создание oauth google 
+
+заходим на https://console.developers.google.com/projectselector/apis/credentials и 
+получаем секретный ключ и client_id, заполняем di.yaml
+
+#### Создание mail.ru 
+
+заходим https://api.mail.ru/sites/my/, добавляем сайт.
+receiver.html можно загрузить в любое место сайта.
+
+#### Создание яндекс
+ 
+Регистрируем приложение на https://oauth.yandex.ru/
+
+#### Создать Facebook
+
+Регистрируем приложение на https://developers.facebook.com/apps/
+
+#### Создать ВКонтакте
+
+Регистрируем приложение на https://vk.com/apps?act=manage
+
+#### Создать Одноклассники
+
+Регистрируем приложение https://ok.ru/vitrine/myuploaded

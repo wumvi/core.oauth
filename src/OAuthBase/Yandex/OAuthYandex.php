@@ -21,4 +21,9 @@ class OAuthYandex extends OAuthBase implements OAuthBaseInterface
     {
         return new TokenCodeResponse($data->access_token);
     }
+
+    public function getTokenUrl(): string
+    {
+        return 'https://oauth.yandex.ru/token';
+    }
 }

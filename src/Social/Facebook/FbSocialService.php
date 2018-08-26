@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Facebook;
 
+use Core\OAuth\OAuthBase\Facebook\OAuthFacebook;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
 /**
  * Сервис для Facebook
+ *
  * @author Kozlenko Vitaliy
  * @see https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Dwebsite%2Cbirthday&version=v2.6
  */
@@ -22,27 +24,29 @@ class FbSocialService implements FbSocialServiceInterface
     protected $curl;
 
     /**
-     * @var string Id приложения
+     * @var OAuthFacebook
      */
-    private $appId;
-
-    /**
-     * @var string Приватный ключ
-     */
-    private $privateKey;
+    private $oauthFacebook;
 
     /**
      * FbSocialService constructor.
      *
-     * @param string $appId ID приложения
-     * @param string $privateKey Приватный ключ
+     * @param OAuthFacebook $authFacebook
      * @param CurlInterface $curl
      */
-    public function __construct(string $appId, string $privateKey, CurlInterface $curl)
+    public function __construct(OAuthFacebook $authFacebook, CurlInterface $curl)
     {
         $this->curl = $curl;
-        $this->appId = $appId;
-        $this->privateKey = $privateKey;
+        $this->oauthFacebook = $authFacebook;
+    }
+
+    public function getLink(string $redirectUrl): string
+    {
+        $url = 'https://www.facebook.com/dialog/oauth?client_id=' . $this->oauthFacebook->getClientId();
+        $url .= '&redirect_uri=' . $redirectUrl;
+        $url .= '&response_type=code&scope=email';
+
+        return $url;
     }
 
     /**

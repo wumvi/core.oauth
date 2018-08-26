@@ -12,7 +12,7 @@ interface VkUserInterface
      * Устанавливаем Email пользователя
      * @param string $email Email пользователя
      */
-    public function setEmail($email): void;
+    public function setEmail(string $email): void;
 
     /**
      * Получаем Email пользователя

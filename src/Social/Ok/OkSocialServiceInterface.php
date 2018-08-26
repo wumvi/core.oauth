@@ -20,4 +20,6 @@ interface OkSocialServiceInterface
      * @throws
      */
     public function getUserInfo(string $authToken): ?OkUserInterface;
+
+    public function getLink(string $redirectUrl, string $oauthId): string;
 }

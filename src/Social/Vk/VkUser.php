@@ -44,7 +44,7 @@ class VkUser implements VkUserInterface
      * Устанавливаем Email пользователя
      * @param string $email Email пользователя
      */
-    public function setEmail($email): void
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }

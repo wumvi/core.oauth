@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace Core\OAuth\OAuthBase;
 
 use LightweightCurl\Curl;
+use LightweightCurl\CurlException;
 use LightweightCurl\Request;
 
 abstract class OAuthBase
 {
+    public const SESSION_OAUTH_NAME = 'oauth-id';
+
     /**
      * @var Curl Расширенный curl
      */
@@ -16,7 +19,7 @@ abstract class OAuthBase
     /**
      * @var string ID сайта
      */
-    protected $siteId;
+    protected $clientId;
 
     /**
      * @var string Секретный ключ
@@ -24,23 +27,21 @@ abstract class OAuthBase
     protected $clientSecret;
 
     /**
-     * @var string URL для обращения
-     */
-    protected $tokenUrl;
-
-    /**
      * OAuthBase constructor.
      *
-     * @param string $siteId ID сайта
+     * @param string $clientId Id клиента
      * @param string $clientSecret Секретный ключ
-     * @param string $tokenUrl URL для обращения
      */
-    public function __construct(string $siteId, string $clientSecret, string $tokenUrl)
+    public function __construct(string $clientId, string $clientSecret)
     {
         $this->curl = new Curl();
-        $this->siteId = $siteId;
+        $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
-        $this->tokenUrl = $tokenUrl;
+    }
+
+    public function getClientSecret(): string
+    {
+        return $this->clientSecret;
     }
 
     /**
@@ -59,11 +60,14 @@ abstract class OAuthBase
      * @return TokenCodeResponseInterface|null Ответ сервера
      *
      * @throws
+     *
+     * @throws CurlException
+     * @throws \Exception
      */
     public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
     {
         $post = [
-            'client_id' => $this->siteId,
+            'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'authorization_code',
             'code' => $code,
@@ -71,12 +75,16 @@ abstract class OAuthBase
         ];
 
         $request = new Request();
-        $request->setUrl($this->tokenUrl);
+        $request->setUrl($this->getTokenUrl());
         $request->setData($post);
         $request->setMethod(Request::METHOD_POST);
 
         $response = $this->curl->call($request);
         $data = json_decode($response->getData());
+
+        if ($response->getHttpCode() !== 200) {
+            throw new \Exception('Error during request');
+        }
 
         return $data === null || isset($data->error) ? null : $this->getTokenCodeResponse($data);
     }
@@ -91,14 +99,14 @@ abstract class OAuthBase
     public function getRefreshTokenCode($refreshToken): ?TokenCodeResponseInterface
     {
         $post = [
-            'client_id' => $this->siteId,
+            'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken
         ];
 
         $request = new Request();
-        $request->setUrl($this->tokenUrl);
+        $request->setUrl($this->getTokenUrl());
         $request->setData($post);
         $request->setMethod(Request::METHOD_POST);
 
@@ -107,4 +115,11 @@ abstract class OAuthBase
 
         return $data === null || isset($data->error) ? null : $this->getTokenCodeResponse($data);
     }
+
+    public function getClientId(): string
+    {
+        return $this->clientId;
+    }
+
+    public abstract function getTokenUrl(): string;
 }

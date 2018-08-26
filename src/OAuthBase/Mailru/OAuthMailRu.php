@@ -13,10 +13,16 @@ class OAuthMailru extends OAuthBase implements OAuthBaseInterface
 {
     /**
      * @param mixed $data
+     *
      * @return TokenCodeResponseInterface
      */
     public function getTokenCodeResponse($data): TokenCodeResponseInterface
     {
-        return new TokenCodeResponse($data->access_token,  $data->x_mailru_vid);
+        return new TokenCodeResponse($data->access_token, $data->x_mailru_vid);
+    }
+
+    public function getTokenUrl(): string
+    {
+        return 'https://connect.mail.ru/oauth/token';
     }
 }

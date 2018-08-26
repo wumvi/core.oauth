@@ -1,8 +1,9 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Vk;
 
+use Core\OAuth\OAuthBase\Vk\OAuthVk;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
@@ -11,35 +12,44 @@ use LightweightCurl\Request;
  */
 class VkSocialService implements VkSocialServiceInterface
 {
-    const URL_API = 'https://api.vk.com/method/';
+    private const URL_API = 'https://api.vk.com/method/';
+
+    private const VERSION = '5.8';
 
     /**
      * @var CurlInterface Расширенный curl
      */
     protected $curl;
 
-    /** @var string ID сайта */
-    protected $siteId;
-
-    /** @var string Секретный ключ */
-    protected $clientSecret;
+    /**
+     * @var OAuthVk
+     */
+    protected $authVk;
 
     /**
      * VkSocialService constructor.
      *
-     * @param string $siteId ID сайта
-     * @param string $clientSecret Секретный ключ
+     * @param OAuthVk $authVk
      * @param CurlInterface $curl
      */
-    public function __construct(string $siteId, string $clientSecret, CurlInterface $curl)
+    public function __construct(OAuthVk $authVk, CurlInterface $curl)
     {
         $this->curl = $curl;
-        $this->siteId = $siteId;
-        $this->clientSecret = $clientSecret;
+        $this->authVk = $authVk;
+    }
+
+    public function getLink(string $redirectUrl): string
+    {
+        $url = 'https://oauth.vk.com/authorize?client_id=' . $this->authVk->getClientId();
+        $url .= '&redirect_uri=' . $redirectUrl;
+        $url .= '&display=page&scope=4194304&response_type=code&v=5.52';
+
+        return $url;
     }
 
     /**
      * Получение информацию по пользователю
+     *
      * @param string $vkUserId Id пользователя сайта Вконтакте
      * @param string $accessToken AccessToken
      *
@@ -53,7 +63,7 @@ class VkSocialService implements VkSocialServiceInterface
     {
         $params = [
             'user_id' => $vkUserId,
-            'vk' => '5.8',
+            'version' => self::VERSION,
             'access_token' => $accessToken,
             'fields' => 'sex,bdate',
         ];

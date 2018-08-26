@@ -17,4 +17,9 @@ class OAuthGoogle extends OAuthBase implements OAuthBaseInterface
     {
         return new TokenCodeResponse($data->access_token);
     }
+
+    public function getTokenUrl(): string
+    {
+        return 'https://accounts.google.com/o/oauth2/token';
+    }
 }

@@ -16,4 +16,6 @@ interface YandexServiceInterface
      * @throws
      */
     public function getUserInfo(string $authToken): ?YaUserInterface;
+
+    public function getLink(string $oauthId): string;
 }

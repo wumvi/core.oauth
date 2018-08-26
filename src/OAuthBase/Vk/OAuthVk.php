@@ -22,7 +22,12 @@ class OAuthVk extends OAuthBase implements OAuthBaseInterface
             $data->expires_in,
             $data->access_token,
             $data->user_id,
-            $data->email
+            $data->email ?: ''
         );
+    }
+
+    public function getTokenUrl(): string
+    {
+        return 'https://oauth.vk.com/access_token';
     }
 }
