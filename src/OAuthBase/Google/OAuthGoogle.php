@@ -5,7 +5,7 @@ namespace Core\OAuth\OAuthBase\Google;
 
 use Core\OAuth\OAuthBase\OAuthBase;
 use Core\OAuth\OAuthBase\OAuthBaseInterface;
-use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 
 class OAuthGoogle extends OAuthBase implements OAuthBaseInterface
 {

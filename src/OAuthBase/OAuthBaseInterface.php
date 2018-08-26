@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase;
 
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
+
 interface OAuthBaseInterface
 {
     /**

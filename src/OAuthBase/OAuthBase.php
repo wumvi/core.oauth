@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Core\OAuth\OAuthBase;
 
 use LightweightCurl\Curl;
-use LightweightCurl\CurlException;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 

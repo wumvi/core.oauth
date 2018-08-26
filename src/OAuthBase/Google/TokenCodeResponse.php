@@ -3,8 +3,7 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\OAuthBase\Google;
 
-use Core\Model\Read;
-use \Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 
 /**
  * TokenCodeResponse

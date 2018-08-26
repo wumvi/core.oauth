@@ -5,7 +5,7 @@ namespace Core\OAuth\OAuthBase\Yandex;
 
 use Core\OAuth\OAuthBase\OAuthBase;
 use Core\OAuth\OAuthBase\OAuthBaseInterface;
-use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 
 /**
  * Управление OAuth авторизацией для сайта Yandex

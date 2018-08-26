@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Vk;
 
-use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 
 /**
  * Модель данных от VK, после OAuth авторизации
  */
-class TokenCodeResponse implements TokenCodeResponseInterface
+class TokenCodeResponse implements TokenCodeResponseInterface, VkTokenCodeResponseInterface
 {
     /**
      * @var string

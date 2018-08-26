@@ -2,12 +2,12 @@
 
 namespace Core\OAuth\OAuthBase\Mailru;
 
-use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 
 /**
  * TokenCodeResponse
  */
-class TokenCodeResponse implements TokenCodeResponseInterface
+class TokenCodeResponse implements TokenCodeResponseInterface, MainRuTokenCodeResponseInterface
 {
     /**
      * @var string
@@ -21,7 +21,9 @@ class TokenCodeResponse implements TokenCodeResponseInterface
 
     /**
      * TokenCodeResponse constructor.
+     *
      * @param string $token
+     * @param string $userId
      */
     public function __construct(string $token, string $userId)
     {

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Facebook;
 
-use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 
 /**
  * Модель токена для сайта Facebook
