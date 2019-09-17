@@ -3,13 +3,12 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Vk;
 
-use LightweightCurl\CurlInterface;
-use LightweightCurl\Request;
+use Core\OAuth\Social\ISocialUser;
 
 /**
  * Сервис работы с API сайта ВКонтакте
  */
-interface VkSocialServiceInterface
+interface IVkSocialService
 {
     /**
      * Получение информацию по пользователю
@@ -18,9 +17,9 @@ interface VkSocialServiceInterface
      *
      * @see https://vk.com/dev/users.get
      *
-     * @return VkUserInterface|null
+     * @return ISocialUser|null
      */
-    public function getUserInfo(int $userId, string $accessToken): ?VkUserInterface;
+    public function getUserInfo(int $userId, string $accessToken): ?ISocialUser;
 
     public function getLink(string $redirectUrl, string $scope): string;
 }

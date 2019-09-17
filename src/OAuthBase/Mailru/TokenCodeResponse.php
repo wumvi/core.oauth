@@ -15,7 +15,7 @@ class TokenCodeResponse implements TokenCodeResponseInterface, MainRuTokenCodeRe
     private $token;
 
     /**
-     * @var string
+     * @var int
      */
     private $userId;
 
@@ -23,9 +23,9 @@ class TokenCodeResponse implements TokenCodeResponseInterface, MainRuTokenCodeRe
      * TokenCodeResponse constructor.
      *
      * @param string $token
-     * @param string $userId
+     * @param int $userId
      */
-    public function __construct(string $token, string $userId)
+    public function __construct(string $token, int $userId)
     {
         $this->token = $token;
         $this->userId = $userId;
@@ -36,7 +36,7 @@ class TokenCodeResponse implements TokenCodeResponseInterface, MainRuTokenCodeRe
         return $this->token;
     }
 
-    public function getUserId(): string
+    public function getUserId(): int
     {
         return $this->userId;
     }

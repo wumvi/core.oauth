@@ -11,6 +11,7 @@ class OAuthGoogle extends OAuthBase implements OAuthBaseInterface
 {
     /**
      * @param Object $data Сырые данные из запроса
+     *
      * @return TokenCodeResponseInterface
      */
     public function getTokenCodeResponse($data): TokenCodeResponseInterface

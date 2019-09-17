@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Facebook;
 
 use Core\OAuth\OAuthBase\Facebook\OAuthFacebook;
+use Core\OAuth\Social\ISocialUser;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
@@ -13,7 +14,7 @@ use LightweightCurl\Request;
  * @author Kozlenko Vitaliy
  * @see https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Dwebsite%2Cbirthday&version=v2.6
  */
-class FbSocialService implements FbSocialServiceInterface
+class FbSocialService implements IFbSocialService
 {
     private const URL_API = 'https://graph.facebook.com/me?fields=' .
     'birthday,website,email,first_name,last_name,gender&access_token=%s';
@@ -55,13 +56,13 @@ class FbSocialService implements FbSocialServiceInterface
      *
      * @param string $authToken Токен после авторизации
      *
-     * @return FbUserInterface|null Модель пользователя
+     * @return ISocialUser|null Модель пользователя
      *
      * @see https://developers.facebook.com/docs/graph-api/reference/user
      *
      * @throws
      */
-    public function getUserInfo(string $authToken): ?FbUserInterface
+    public function getUserInfo(string $authToken): ?ISocialUser
     {
         $url = vsprintf(self::URL_API, [$authToken,]);
 
@@ -75,7 +76,6 @@ class FbSocialService implements FbSocialServiceInterface
         }
 
         return new FbUser([
-            FbUser::PROP_SEX => $data->gender,
             FbUser::PROP_ID => $data->id,
             FbUser::PROP_LAST_NAME => $data->last_name,
             FbUser::PROP_FIRST_NAME => $data->first_name,

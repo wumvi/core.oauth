@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Yandex;
 
 use Core\OAuth\OAuthBase\Yandex\OAuthYandex;
+use Core\OAuth\Social\ISocialUser;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
 /**
  * Class YandexService
  */
-class YandexService implements YandexServiceInterface
+class YandexService implements IYandexService
 {
     private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=%s';
 
@@ -48,11 +49,11 @@ class YandexService implements YandexServiceInterface
     /**
      * @param string $authToken
      *
-     * @return YaUserInterface|null
+     * @return ISocialUser|null
      *
      * @throws
      */
-    public function getUserInfo(string $authToken): ?YaUserInterface
+    public function getUserInfo(string $authToken): ?ISocialUser
     {
         $url = vsprintf(self::URL_API, [$authToken,]);
 

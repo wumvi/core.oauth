@@ -1,12 +1,14 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Vk;
+
+use Core\OAuth\Social\ISocialUser;
 
 /**
  * Модель пользователя VK
  */
-class VkUser implements VkUserInterface
+class VkUser implements ISocialUser, IVkUser
 {
     /** Id пользователя */
     const PROP_ID = 'id';
@@ -25,6 +27,10 @@ class VkUser implements VkUserInterface
 
     /** @var string Email пользователя */
     private $email = '';
+
+    /**
+     * @var int
+     */
     private $id;
     private $firstName;
     private $lastName;
@@ -33,7 +39,7 @@ class VkUser implements VkUserInterface
 
     public function __construct(array $raw)
     {
-        $this->id = $raw[self::PROP_ID];
+        $this->id = (int)$raw[self::PROP_ID];
         $this->firstName = $raw[self::PROP_FIRST_NAME];
         $this->lastName = $raw[self::PROP_LAST_NAME];
         $this->birthday = $raw[self::PROP_BIRTHDAY];
@@ -42,6 +48,7 @@ class VkUser implements VkUserInterface
 
     /**
      * Устанавливаем Email пользователя
+     *
      * @param string $email Email пользователя
      */
     public function setEmail(string $email): void
@@ -58,7 +65,7 @@ class VkUser implements VkUserInterface
         return $this->email;
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }

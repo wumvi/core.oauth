@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace Core\OAuth\Social\Ok;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя сайта Одноклассники
  */
-class OkUser implements OkUserInterface
+class OkUser implements ISocialUser
 {
     /** Id пользователя */
     const PROP_ID = 'id';
@@ -29,6 +31,9 @@ class OkUser implements OkUserInterface
     /** Пол пользователя */
     const PROP_SEX = 'sex';
 
+    /**
+     * @var int
+     */
     private $id;
     private $firstName;
     private $lastName;
@@ -38,7 +43,7 @@ class OkUser implements OkUserInterface
 
     public function __construct(array $raw)
     {
-        $this->id = $raw[self::PROP_ID];
+        $this->id = (int)$raw[self::PROP_ID];
         $this->firstName = $raw[self::PROP_FIRST_NAME];
         $this->lastName = $raw[self::PROP_LAST_NAME];
         $this->email = $raw[self::PROP_HAS_EMAIL] ? $raw[self::PROP_EMAIL] : '';
@@ -46,7 +51,7 @@ class OkUser implements OkUserInterface
         $this->sex = $raw[self::PROP_SEX];
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }

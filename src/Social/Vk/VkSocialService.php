@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Vk;
 
 use Core\OAuth\OAuthBase\Vk\OAuthVk;
+use Core\OAuth\Social\ISocialUser;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
 /**
  * Сервис работы с API сайта ВКонтакте
  */
-class VkSocialService implements VkSocialServiceInterface
+class VkSocialService implements IVkSocialService
 {
     private const URL_API = 'https://api.vk.com/method/';
 
@@ -57,11 +58,11 @@ class VkSocialService implements VkSocialServiceInterface
      *
      * @see https://vk.com/dev/users.get
      *
-     * @return VkUserInterface|null
+     * @return ISocialUser|null
      *
      * @throws
      */
-    public function getUserInfo(int $userId, string $accessToken): ?VkUserInterface
+    public function getUserInfo(int $userId, string $accessToken): ?ISocialUser
     {
         $params = [
             'user_id' => $userId,

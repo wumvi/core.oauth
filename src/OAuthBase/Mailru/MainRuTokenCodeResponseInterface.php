@@ -7,5 +7,5 @@ namespace Core\OAuth\OAuthBase\Mailru;
 
 interface MainRuTokenCodeResponseInterface
 {
-    public function getUserId(): string;
+    public function getUserId(): int;
 }

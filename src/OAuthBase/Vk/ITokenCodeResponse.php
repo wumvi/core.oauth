@@ -8,7 +8,7 @@ use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
 /**
  * Модель данных от VK, после OAuth авторизации
  */
-class TokenCodeResponse implements TokenCodeResponseInterface, VkTokenCodeResponseInterface
+class ITokenCodeResponse implements TokenCodeResponseInterface, IVkTokenCodeResponse
 {
     /**
      * @var string

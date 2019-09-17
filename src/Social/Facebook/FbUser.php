@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Facebook;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя сайта Facebook
  */
-class FbUser implements FbUserInterface
+class FbUser implements ISocialUser
 {
     /** Id пользователя */
     public const PROP_ID = 'id';
@@ -20,30 +22,23 @@ class FbUser implements FbUserInterface
     /** Email пользователя */
     public const PROP_EMAIL = 'email';
 
-    /** День рождения пользователя */
-    public const PROP_BIRTHDAY = 'birthday';
-
-    /** Пол пользователя */
-    public const PROP_SEX = 'sex';
-
+    /**
+     * @var int
+     */
     private $id;
     private $firstName;
     private $lastName;
     private $email;
-    private $birthday;
-    private $sex;
 
     public function __construct(array $raw)
     {
-        $this->id = $raw[self::PROP_ID];
+        $this->id = (int)$raw[self::PROP_ID];
         $this->firstName = $raw[self::PROP_FIRST_NAME];
         $this->lastName = $raw[self::PROP_LAST_NAME];
         $this->email = $raw[self::PROP_EMAIL];
-        $this->birthday = $raw[self::PROP_BIRTHDAY];
-        $this->sex = $raw[self::PROP_SEX];
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
@@ -61,15 +56,5 @@ class FbUser implements FbUserInterface
     public function getEmail(): string
     {
         return $this->email;
-    }
-
-    public function getBirthday(): string
-    {
-        return $this->birthday;
-    }
-
-    public function getSex(): string
-    {
-        return $this->sex;
     }
 }

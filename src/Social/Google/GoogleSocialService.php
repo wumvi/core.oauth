@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Google;
 
 use Core\OAuth\OAuthBase\Google\OAuthGoogle;
+use Core\OAuth\Social\ISocialUser;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
 /**
  * @author Kozlenko Vitaliy
  */
-class GoogleSocialService implements GoogleSocialServiceInterface
+class GoogleSocialService implements IGoogleSocialService
 {
     /**
      * @var CurlInterface Расширенный curl
@@ -41,9 +42,9 @@ class GoogleSocialService implements GoogleSocialServiceInterface
     /**
      * @param string $accessToken
      *
-     * @return GoogleUserInterface|null
+     * @return ISocialUser|null
      */
-    public function getUserInfo(string $accessToken): ?GoogleUserInterface
+    public function getUserInfo(string $accessToken): ?ISocialUser
     {
         $url = vsprintf('https://www.googleapis.com/oauth2/v1/userinfo?access_token=%s', [$accessToken,]);
 

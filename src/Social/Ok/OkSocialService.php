@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Ok;
 
 use Core\OAuth\OAuthBase\Ok\OAuthOk;
+use Core\OAuth\Social\ISocialUser;
 use LightweightCurl\Curl;
 use LightweightCurl\CurlException;
 use LightweightCurl\Request;
@@ -15,7 +16,7 @@ use LightweightCurl\CurlInterface;
  *
  * @see http://coddism.com/php/oauth_avtorizacija_cherez_odnoklassnikiru
  */
-class OkSocialService implements OkSocialServiceInterface
+class OkSocialService implements IOkSocialService
 {
     private const URL_API = 'http://api.odnoklassniki.ru/fb.do?%s';
 
@@ -56,11 +57,11 @@ class OkSocialService implements OkSocialServiceInterface
      *
      * @param string $authToken AuthToken
      *
-     * @return OkUserInterface|null
+     * @return ISocialUser|null
      *
      * @throws
      */
-    public function getUserInfo(string $authToken): ?OkUserInterface
+    public function getUserInfo(string $authToken): ?ISocialUser
     {
         $sign = md5($authToken . $this->authOk->getClientSecret());
         $sing = md5('application_key=' . $this->authOk->getPublicKey() . 'method=users.getCurrentUser' . $sign);

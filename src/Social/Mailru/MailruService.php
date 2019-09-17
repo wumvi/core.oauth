@@ -5,6 +5,7 @@ namespace Core\OAuth\Social\Mailru;
 
 use Core\OAuth\OAuthBase\Mailru\OAuthMailRu;
 use Core\OAuth\OAuthBase\TokenCodeResponseInterface;
+use Core\OAuth\Social\ISocialUser;
 use Core\Utils\JsonToReadConverter;
 use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
@@ -14,7 +15,7 @@ use LightweightCurl\Request;
  * @see http://api.mail.ru/docs/guides/oauth/sites/
  * @see http://habrahabr.ru/company/mailru/blog/115163/
  */
-class MailruService implements MailruServiceInterface
+class MailruService implements IMailruService
 {
     const URL_API = 'http://www.appsmail.ru/platform/api';
 
@@ -54,13 +55,13 @@ class MailruService implements MailruServiceInterface
 
     /**
      * @param string $accessToken
-     * @param string $userId
+     * @param int $userId
      *
-     * @return MailRuUserInterface|null Массив моделей пользователей
+     * @return ISocialUser|null Массив моделей пользователей
      *
      * @throws
      */
-    public function getUserInfo(string $accessToken, string $userId): ?MailRuUserInterface
+    public function getUserInfo(string $accessToken, int $userId): ?ISocialUser
     {
         // Ключи должны быть в алфавитном порядке, это крайне важно!
         $params = [

@@ -18,10 +18,10 @@ class OAuthVk extends OAuthBase implements OAuthBaseInterface
      */
     public function getTokenCodeResponse($data): TokenCodeResponseInterface
     {
-        return new TokenCodeResponse(
+        return new ITokenCodeResponse(
             $data->expires_in,
             $data->access_token,
-            $data->user_id,
+            (int)$data->user_id,
             $data->email ?: ''
         );
     }

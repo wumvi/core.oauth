@@ -7,7 +7,7 @@ namespace Core\OAuth\OAuthBase\Vk;
 /**
  * Модель данных от VK, после OAuth авторизации
  */
-interface VkTokenCodeResponseInterface
+interface IVkTokenCodeResponse
 {
     /**
      * @return int
