@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Facebook;
 
+use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 use Core\OAuth\OAuthBase\OAuthBase;
-use Core\OAuth\OAuthBase\OAuthBaseInterface;
-use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\IOAuthBase;
 use LightweightCurl\Request;
 
 /**
  * Управление OAuth авторизацией для сайта Facebook
  */
-class OAuthFacebook extends OAuthBase implements OAuthBaseInterface
+class OAuthFacebook extends OAuthBase implements IOAuthBase
 {
     /**
      * @inheritdoc
      */
-    public function getTokenCodeResponse($data): TokenCodeResponseInterface
+    public function getTokenCodeResponse(\stdClass $data): CommonTokenCodeResponse
     {
         // Dummy method. Only for override method
     }
@@ -24,11 +24,10 @@ class OAuthFacebook extends OAuthBase implements OAuthBaseInterface
     /**
      * @param string $code Код от редиректа
      * @param string $redirectUri Страница редиректа. *По факту не используемый параметр для запроса
-     * @return TokenCodeResponseInterface|null Ответ сервера
-
+     * @return TokenCodeResponse|null Ответ сервера
      * @throws
      */
-    public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
+    public function getAuthorizationCode(string $code, string $redirectUri): ?CommonTokenCodeResponse
     {
         $post = [
             'client_id' => $this->clientId,
@@ -45,12 +44,12 @@ class OAuthFacebook extends OAuthBase implements OAuthBaseInterface
 
         $response = $this->curl->call($request);
 
-        $data = json_decode($response->getData(), true);
-        if (!isset($data['access_token'])) {
+        $data = json_decode($response->getData());
+        if (!isset($data->access_token)) {
             return null;
         }
 
-        return new TokenCodeResponse($data['access_token']);
+        return new TokenCodeResponse($data);
     }
 
     public function getTokenUrl(): string

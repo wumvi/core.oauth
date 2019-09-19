@@ -1,70 +1,42 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Google;
-
-use Core\OAuth\Social\ISocialUser;
 
 /**
  * Модель пользователя сайта Google.com
  */
-class GoogleUser implements ISocialUser
+class GoogleUser
 {
-    /** Id пользователя */
-    const PROP_ID = 'id';
+    private $raw;
 
-    /** Email пользователя */
-    const PROP_EMAIL = 'email';
-
-    /** Имя пользователя */
-    const PROP_FIRST_NAME = 'firstName';
-
-    /** Фамилия пользователя */
-    const PROP_LAST_NAME = 'lastName';
-
-    /** Пол пользователя */
-    const PROP_SEX = 'sex';
-
-    /**
-     * @var int
-     */
-    private $id;
-    private $firstName;
-    private $lastName;
-    private $email;
-    private $sex;
-
-    public function __construct(array $raw)
+    public function __construct(\stdClass $raw)
     {
-        $this->id = (int)$raw[self::PROP_ID];
-        $this->firstName = $raw[self::PROP_FIRST_NAME];
-        $this->lastName = $raw[self::PROP_LAST_NAME];
-        $this->email = $raw[self::PROP_EMAIL];
-        $this->sex = $raw[self::PROP_SEX];
+        $this->raw = $raw;
     }
 
     public function getId(): int
     {
-        return $this->id;
+        return (int)$this->raw->id;
     }
 
     public function getFirstName(): string
     {
-        return $this->firstName;
+        return $this->raw->given_name;
     }
 
     public function getLastName(): string
     {
-        return $this->lastName;
+        return $this->raw->family_name;
     }
 
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->raw->email;
     }
 
     public function getSex(): string
     {
-        return $this->sex;
+        return $this->raw->gender;
     }
 }

@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase;
 
+use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 use LightweightCurl\Curl;
-use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
-use LightweightCurl\CurlInterface;
 use LightweightCurl\Request;
 
-abstract class OAuthBase implements OAuthBaseInterface
+abstract class OAuthBase
 {
     /**
      * @var Curl Расширенный curl
@@ -30,11 +29,10 @@ abstract class OAuthBase implements OAuthBaseInterface
      *
      * @param string $clientId Id клиента
      * @param string $clientSecret Секретный ключ
-     * @param CurlInterface $curl
      */
-    public function __construct(string $clientId, string $clientSecret, CurlInterface $curl)
+    public function __construct(string $clientId, string $clientSecret)
     {
-        $this->curl = $curl;
+        $this->curl = new Curl();
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
     }
@@ -47,9 +45,9 @@ abstract class OAuthBase implements OAuthBaseInterface
     /**
      * @param mixed $data Данные
      *
-     * @return TokenCodeResponseInterface
+     * @return CommonTokenCodeResponse
      */
-    abstract public function getTokenCodeResponse($data): TokenCodeResponseInterface;
+    abstract public function getTokenCodeResponse(\stdClass $data): CommonTokenCodeResponse;
 
     /**
      * Производит запрос и получает данные
@@ -57,11 +55,11 @@ abstract class OAuthBase implements OAuthBaseInterface
      * @param string $code Код от редиректа
      * @param string $redirectUri Страница редиректа. *По факту не используемый параметр для запроса
      *
-     * @return TokenCodeResponseInterface|null Ответ сервера
+     * @return CommonTokenCodeResponse|null Ответ сервера
      *
      * @throws
      */
-    public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
+    public function getAuthorizationCode(string $code, string $redirectUri): ?CommonTokenCodeResponse
     {
         $post = [
             'client_id' => $this->clientId,
@@ -78,6 +76,7 @@ abstract class OAuthBase implements OAuthBaseInterface
 
         $response = $this->curl->call($request);
         $data = json_decode($response->getData());
+        // var_dump($response);
 
         if ($response->getHttpCode() !== 200) {
             throw new \Exception('Error during request');
@@ -89,11 +88,11 @@ abstract class OAuthBase implements OAuthBaseInterface
     /**
      * @param $refreshToken
      *
-     * @return TokenCodeResponseInterface|null
+     * @return CommonTokenCodeResponse|null
      *
      * @throws
      */
-    public function getRefreshTokenCode($refreshToken): ?TokenCodeResponseInterface
+    public function getRefreshTokenCode($refreshToken): ?CommonTokenCodeResponse
     {
         $post = [
             'client_id' => $this->clientId,

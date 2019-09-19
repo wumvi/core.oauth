@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase;
 
-use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 
-interface OAuthBaseInterface
+interface IOAuthBase
 {
     /**
      * @param mixed $data Данные
      *
-     * @return TokenCodeResponseInterface
+     * @return CommonTokenCodeResponse
      */
-    public function getTokenCodeResponse($data): TokenCodeResponseInterface;
+    public function getTokenCodeResponse(\stdClass $data): CommonTokenCodeResponse;
 
     /**
      * Производит запрос и получает данные
@@ -20,20 +20,20 @@ interface OAuthBaseInterface
      * @param string $code Код от редиректа
      * @param string $redirectUri Страница редиректа. *По факту не используемый параметр для запроса
      *
-     * @return TokenCodeResponseInterface|null Ответ сервера
+     * @return CommonTokenCodeResponse|null Ответ сервера
      *
      * @throws
      */
-    public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface;
+    public function getAuthorizationCode(string $code, string $redirectUri): ?CommonTokenCodeResponse;
 
     /**
      * @param $refreshToken
      *
-     * @return TokenCodeResponseInterface|null
+     * @return CommonTokenCodeResponse|null
      *
      * @throws
      */
-    public function getRefreshTokenCode($refreshToken): ?TokenCodeResponseInterface;
+    public function getRefreshTokenCode($refreshToken): ?CommonTokenCodeResponse;
 
     public function getClientId(): string;
 

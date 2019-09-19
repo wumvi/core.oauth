@@ -1,80 +1,47 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\OAuth\Social\Mailru;
-
-use Core\OAuth\Social\ISocialUser;
 
 /**
  * Модель пользователя сайта Mail.ru
  */
-class MailRuUser implements ISocialUser
+class MailRuUser
 {
-    /** День рождения пользователя */
-    const PROP_BIRTHDAY = 'birthday';
+    private $raw;
 
-    /** Почта пользователя */
-    const PROP_EMAIL  = 'email';
-
-    /** ID пользователя */
-    const PROP_ID  = 'id';
-
-    /** Фамилия пользователя */
-    const PROP_LAST_NAME  = 'lastName';
-
-    /** Пол пользователя */
-    const PROP_SEX  = 'sex';
-
-    /** Имя пользователя */
-    const PROP_FIRST_NAME  = 'firstName';
-
-    /**
-     * @var int
-     */
-    private $id;
-    private $firstName;
-    private $lastName;
-    private $email;
-    private $birthday;
-    private $sex;
-
-    public function __construct(array $raw)
+    public function __construct(\stdClass $raw)
     {
-        $this->id = (int)$raw[self::PROP_ID];
-        $this->firstName = $raw[self::PROP_FIRST_NAME];
-        $this->lastName = $raw[self::PROP_LAST_NAME];
-        $this->email = $raw[self::PROP_EMAIL];
-        $this->birthday = $raw[self::PROP_BIRTHDAY];
-        $this->sex = $raw[self::PROP_SEX];
+        $this->raw = $raw;
     }
 
     public function getId(): int
     {
-        return $this->id;
+        return (int)$this->raw->uid;
     }
 
     public function getFirstName(): string
     {
-        return $this->firstName;
+        return $this->raw->first_name;
     }
 
     public function getLastName(): string
     {
-        return $this->lastName;
+        return $this->raw->last_name;
     }
 
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->raw->email;
     }
 
     public function getBirthday(): string
     {
-        return $this->birthday;
+        return $this->raw->birthday;
     }
 
     public function getSex(): string
     {
-        return $this->sex;
+        return $this->raw->sex;
     }
 }

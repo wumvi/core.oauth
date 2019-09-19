@@ -10,7 +10,8 @@
   "require": {
     "php": "~7.1",
     "wumvi/lightweight-curl": "@stable",
-    "wumvi/core.utils": "@stable"
+    "wumvi/core.utils": "@stable",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "@stable",

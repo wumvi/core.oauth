@@ -4,25 +4,19 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Ok;
 
 use Core\OAuth\OAuthBase\Ok\OAuthOk;
-use Core\OAuth\Social\ISocialUser;
 use LightweightCurl\Curl;
-use LightweightCurl\CurlException;
 use LightweightCurl\Request;
-use LightweightCurl\CurlInterface;
-
 
 /**
  * @author Kozlenko Vitaliy
  *
  * @see http://coddism.com/php/oauth_avtorizacija_cherez_odnoklassnikiru
  */
-class OkSocialService implements IOkSocialService
+class OkSocialService
 {
     private const URL_API = 'http://api.odnoklassniki.ru/fb.do?%s';
 
-    /**
-     * @var CurlInterface Расширенный curl
-     */
+    /** @var Curl */
     protected $curl;
 
     /**
@@ -34,11 +28,10 @@ class OkSocialService implements IOkSocialService
      * OkSocial constructor.
      *
      * @param OAuthOk $authOk
-     * @param CurlInterface $curl
      */
-    public function __construct(OAuthOk $authOk, CurlInterface $curl)
+    public function __construct(OAuthOk $authOk)
     {
-        $this->curl = $curl;
+        $this->curl = new Curl();
         $this->authOk = $authOk;
     }
 
@@ -46,7 +39,7 @@ class OkSocialService implements IOkSocialService
     {
         $url = 'https://connect.ok.ru/oauth/authorize?';
         $url .= 'client_id=' . $this->authOk->getClientId();
-        $url .= '&response_type=code&redirect_uri=' . $redirectUrl;
+        $url .= '&response_type=code&redirect_uri=' . urlencode($redirectUrl);
         $url .= '&scope=GET_EMAIL&state=' . $oauthId;
 
         return $url;
@@ -57,11 +50,11 @@ class OkSocialService implements IOkSocialService
      *
      * @param string $authToken AuthToken
      *
-     * @return ISocialUser|null
+     * @return OkUser|null
      *
      * @throws
      */
-    public function getUserInfo(string $authToken): ?ISocialUser
+    public function getUserInfo(string $authToken): ?OkUser
     {
         $sign = md5($authToken . $this->authOk->getClientSecret());
         $sing = md5('application_key=' . $this->authOk->getPublicKey() . 'method=users.getCurrentUser' . $sign);
@@ -79,19 +72,11 @@ class OkSocialService implements IOkSocialService
         $request->setUrl($url);
 
         $response = $this->curl->call($request);
-        $data = json_decode($response->getData());
-        if ($data === null) {
+        $raw = json_decode($response->getData());
+        if ($raw === null) {
             return null;
         }
 
-        return new OkUser([
-            OkUser::PROP_ID => $data->uid,
-            OkUser::PROP_FIRST_NAME => $data->first_name,
-            OkUser::PROP_LAST_NAME => $data->last_name,
-            OkUser::PROP_HAS_EMAIL => $data->has_email,
-            OkUser::PROP_EMAIL => $data->email,
-            OkUser::PROP_BIRTHDAY => $data->birthday,
-            OkUser::PROP_SEX => $data->gender,
-        ]);
+        return new OkUser($raw);
     }
 }

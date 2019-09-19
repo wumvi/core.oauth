@@ -4,19 +4,18 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Yandex;
 
 use Core\OAuth\OAuthBase\Yandex\OAuthYandex;
-use Core\OAuth\Social\ISocialUser;
-use LightweightCurl\CurlInterface;
+use LightweightCurl\Curl;
 use LightweightCurl\Request;
 
 /**
  * Class YandexService
  */
-class YandexService implements IYandexService
+class YandexService
 {
     private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=%s';
 
     /**
-     * @var CurlInterface Расширенный curl
+     * @var Curl Расширенный curl
      */
     protected $curl;
 
@@ -29,11 +28,10 @@ class YandexService implements IYandexService
      * YandexService constructor.
      *
      * @param OAuthYandex $authYandex
-     * @param CurlInterface $curl
      */
-    public function __construct(OAuthYandex $authYandex, CurlInterface $curl)
+    public function __construct(OAuthYandex $authYandex)
     {
-        $this->curl = $curl;
+        $this->curl = new Curl();
         $this->authYandex = $authYandex;
     }
 
@@ -49,11 +47,11 @@ class YandexService implements IYandexService
     /**
      * @param string $authToken
      *
-     * @return ISocialUser|null
+     * @return YaUser|null
      *
      * @throws
      */
-    public function getUserInfo(string $authToken): ?ISocialUser
+    public function getUserInfo(string $authToken): ?YaUser
     {
         $url = vsprintf(self::URL_API, [$authToken,]);
 
@@ -61,18 +59,11 @@ class YandexService implements IYandexService
         $request->setUrl($url);
 
         $response = $this->curl->call($request);
-        $data = json_decode($response->getData());
-        if ($data === null) {
+        $raw = json_decode($response->getData());
+        if ($raw === null) {
             return null;
         }
 
-        return new YaUser([
-            YaUser::PROP_ID => $data->id,
-            YaUser::PROP_FIRST_NAME => $data->first_name,
-            YaUser::PROP_EMAIL => $data->default_email,
-            YaUser::PROP_LAST_NAME => $data->last_name,
-            YaUser::PROP_BIRTHDAY => $data->birthday,
-            YaUser::PROP_SEX => $data->sex,
-        ]);
+        return new YaUser($raw);
     }
 }

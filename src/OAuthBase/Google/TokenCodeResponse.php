@@ -2,30 +2,12 @@
 declare(strict_types = 1);
 
 namespace Core\OAuth\OAuthBase\Google;
-
-use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 
 /**
  * TokenCodeResponse
  */
-class TokenCodeResponse implements TokenCodeResponseInterface
+class TokenCodeResponse extends CommonTokenCodeResponse
 {
-    /**
-     * @var string
-     */
-    private $token;
 
-    /**
-     * TokenCodeResponse constructor.
-     * @param string $token
-     */
-    public function __construct(string $token)
-    {
-        $this->token = $token;
-    }
-
-    public function getAccessToken(): string
-    {
-        return $this->token;
-    }
 }

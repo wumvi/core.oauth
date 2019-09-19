@@ -3,58 +3,36 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Facebook;
 
-use Core\OAuth\Social\ISocialUser;
-
 /**
  * Модель пользователя сайта Facebook
  */
-class FbUser implements ISocialUser
+class FbUser
 {
-    /** Id пользователя */
-    public const PROP_ID = 'id';
+    /** @var \stdClass */
+    private $raw;
 
-    /** Имя пользователя */
-    public const PROP_FIRST_NAME = 'firstName';
-
-    /** Фамилия пользователя */
-    public const PROP_LAST_NAME = 'lastName';
-
-    /** Email пользователя */
-    public const PROP_EMAIL = 'email';
-
-    /**
-     * @var int
-     */
-    private $id;
-    private $firstName;
-    private $lastName;
-    private $email;
-
-    public function __construct(array $raw)
+    public function __construct(\stdClass $raw)
     {
-        $this->id = (int)$raw[self::PROP_ID];
-        $this->firstName = $raw[self::PROP_FIRST_NAME];
-        $this->lastName = $raw[self::PROP_LAST_NAME];
-        $this->email = $raw[self::PROP_EMAIL];
+        $this->raw = $raw;
     }
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->raw->id;
     }
 
     public function getFirstName(): string
     {
-        return $this->firstName;
+        return $this->raw->first_name;
     }
 
     public function getLastName(): string
     {
-        return $this->lastName;
+        return $this->raw->last_name;
     }
 
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->raw->email;
     }
 }

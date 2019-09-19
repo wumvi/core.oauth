@@ -4,17 +4,16 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Google;
 
 use Core\OAuth\OAuthBase\Google\OAuthGoogle;
-use Core\OAuth\Social\ISocialUser;
-use LightweightCurl\CurlInterface;
+use LightweightCurl\Curl;
 use LightweightCurl\Request;
 
 /**
  * @author Kozlenko Vitaliy
  */
-class GoogleSocialService implements IGoogleSocialService
+class GoogleSocialService
 {
     /**
-     * @var CurlInterface Расширенный curl
+     * @var Curl Расширенный curl
      */
     protected $curl;
 
@@ -23,15 +22,15 @@ class GoogleSocialService implements IGoogleSocialService
      */
     private $authGoogle;
 
-    public function __construct(OAuthGoogle $authGoogle, CurlInterface $curl)
+    public function __construct(OAuthGoogle $authGoogle)
     {
-        $this->curl = $curl;
+        $this->curl = new Curl();
         $this->authGoogle = $authGoogle;
     }
 
     public function getLink(string $redirectUri, string $oauthId): string
     {
-        $url = 'https://accounts.google.com/o/oauth2/auth?redirect_uri=' . $redirectUri;
+        $url = 'https://accounts.google.com/o/oauth2/auth?redirect_uri=' . urlencode($redirectUri);
         $url .= '&state=' . $oauthId;
         $url .= '&response_type=code&client_id=' . $this->authGoogle->getClientId();
         $url .= '&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile';
@@ -42,9 +41,9 @@ class GoogleSocialService implements IGoogleSocialService
     /**
      * @param string $accessToken
      *
-     * @return ISocialUser|null
+     * @return GoogleUser|null
      */
-    public function getUserInfo(string $accessToken): ?ISocialUser
+    public function getUserInfo(string $accessToken): ?GoogleUser
     {
         $url = vsprintf('https://www.googleapis.com/oauth2/v1/userinfo?access_token=%s', [$accessToken,]);
 
@@ -57,12 +56,6 @@ class GoogleSocialService implements IGoogleSocialService
             return null;
         }
 
-        return new GoogleUser([
-            GoogleUser::PROP_ID => $data->id,
-            GoogleUser::PROP_EMAIL => $data->email,
-            GoogleUser::PROP_FIRST_NAME => $data->given_name,
-            GoogleUser::PROP_LAST_NAME => $data->family_name,
-            GoogleUser::PROP_SEX => $data->gender,
-        ]);
+        return new GoogleUser($data);
     }
 }

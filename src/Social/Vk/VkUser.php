@@ -3,47 +3,31 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Vk;
 
-use Core\OAuth\Social\ISocialUser;
-
 /**
  * Модель пользователя VK
  */
-class VkUser implements ISocialUser, IVkUser
+class VkUser
 {
-    /** Id пользователя */
-    const PROP_ID = 'id';
-
-    /** Имя пользователя */
-    const PROP_FIRST_NAME = 'firstName';
-
-    /** Фамилия пользователя */
-    const PROP_LAST_NAME = 'lastName';
-
-    /** День рождения пользователя */
-    const PROP_BIRTHDAY = 'birthday';
-
-    /** Пол пользователя */
-    const PROP_SEX = 'sex';
-
     /** @var string Email пользователя */
     private $email = '';
 
-    /**
-     * @var int
-     */
+    private $isClosed = true;
+
+    /** @var int */
     private $id;
     private $firstName;
     private $lastName;
     private $birthday;
     private $sex;
 
-    public function __construct(array $raw)
+    public function __construct(\stdClass $data)
     {
-        $this->id = (int)$raw[self::PROP_ID];
-        $this->firstName = $raw[self::PROP_FIRST_NAME];
-        $this->lastName = $raw[self::PROP_LAST_NAME];
-        $this->birthday = $raw[self::PROP_BIRTHDAY];
-        $this->sex = $raw[self::PROP_SEX];
+        $this->id = (int)$data->id;
+        $this->firstName = $data->first_name;
+        $this->lastName = $data->last_name;
+        $this->birthday = $data->bdate ?? '';
+        $this->sex = $data->sex;
+        $this->isClosed = $data->is_closed;
     }
 
     /**
@@ -88,5 +72,10 @@ class VkUser implements ISocialUser, IVkUser
     public function getSex(): string
     {
         return $this->sex;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->isClosed;
     }
 }

@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Core\OAuth\Social\Facebook;
 
 use Core\OAuth\OAuthBase\Facebook\OAuthFacebook;
-use Core\OAuth\Social\ISocialUser;
-use LightweightCurl\CurlInterface;
+use LightweightCurl\Curl;
 use LightweightCurl\Request;
 
 /**
@@ -14,13 +13,13 @@ use LightweightCurl\Request;
  * @author Kozlenko Vitaliy
  * @see https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Dwebsite%2Cbirthday&version=v2.6
  */
-class FbSocialService implements IFbSocialService
+class FbSocialService
 {
     private const URL_API = 'https://graph.facebook.com/me?fields=' .
     'birthday,website,email,first_name,last_name,gender&access_token=%s';
 
     /**
-     * @var CurlInterface Расширенный curl
+     * @var Curl Расширенный curl
      */
     protected $curl;
 
@@ -33,11 +32,10 @@ class FbSocialService implements IFbSocialService
      * FbSocialService constructor.
      *
      * @param OAuthFacebook $authFacebook
-     * @param CurlInterface $curl
      */
-    public function __construct(OAuthFacebook $authFacebook, CurlInterface $curl)
+    public function __construct(OAuthFacebook $authFacebook)
     {
-        $this->curl = $curl;
+        $this->curl = new Curl();
         $this->oauthFacebook = $authFacebook;
     }
 
@@ -56,13 +54,13 @@ class FbSocialService implements IFbSocialService
      *
      * @param string $authToken Токен после авторизации
      *
-     * @return ISocialUser|null Модель пользователя
-     *
-     * @see https://developers.facebook.com/docs/graph-api/reference/user
+     * @return FbUser|null Модель пользователя
      *
      * @throws
+     *
+     * @see https://developers.facebook.com/docs/graph-api/reference/user
      */
-    public function getUserInfo(string $authToken): ?ISocialUser
+    public function getUserInfo(string $authToken): ?FbUser
     {
         $url = vsprintf(self::URL_API, [$authToken,]);
 
@@ -70,16 +68,14 @@ class FbSocialService implements IFbSocialService
         $request->setUrl($url);
 
         $response = $this->curl->call($request);
+        if ($response->getHttpCode() !== 200) {
+            return null;
+        }
         $data = json_decode($response->getData());
         if ($data === null) {
             return null;
         }
 
-        return new FbUser([
-            FbUser::PROP_ID => $data->id,
-            FbUser::PROP_LAST_NAME => $data->last_name,
-            FbUser::PROP_FIRST_NAME => $data->first_name,
-            FbUser::PROP_EMAIL => $data->email
-        ]);
+        return new FbUser($data);
     }
 }

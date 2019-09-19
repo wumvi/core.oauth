@@ -2,35 +2,13 @@
 
 namespace Core\OAuth\OAuthBase\Mailru;
 
-use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
+use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 
 /**
  * TokenCodeResponse
  */
-class TokenCodeResponse implements TokenCodeResponseInterface, MainRuTokenCodeResponseInterface
+class TokenCodeResponse extends CommonTokenCodeResponse
 {
-    /**
-     * @var string
-     */
-    private $token;
-
-    /**
-     * @var int
-     */
-    private $userId;
-
-    /**
-     * TokenCodeResponse constructor.
-     *
-     * @param string $token
-     * @param int $userId
-     */
-    public function __construct(string $token, int $userId)
-    {
-        $this->token = $token;
-        $this->userId = $userId;
-    }
-
     public function getAccessToken(): string
     {
         return $this->token;
@@ -38,6 +16,6 @@ class TokenCodeResponse implements TokenCodeResponseInterface, MainRuTokenCodeRe
 
     public function getUserId(): int
     {
-        return $this->userId;
+        return (int)$this->raw->x_mailru_vid;
     }
 }

@@ -3,25 +3,25 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Ok;
 
+use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 use Core\OAuth\OAuthBase\OAuthBase;
-use Core\OAuth\OAuthBase\OAuthBaseInterface;
-use Core\OAuth\OAuthBase\Common\TokenCodeResponseInterface;
-use LightweightCurl\CurlInterface;
+use Core\OAuth\OAuthBase\IOAuthBase;
 use LightweightCurl\Request;
 
 /**
  * Управление OAuth авторизацией для сайта Однокласники
  */
-class OAuthOk extends OAuthBase implements OAuthBaseInterface
+class OAuthOk extends OAuthBase implements IOAuthBase
 {
     /**
      * @var string
      */
     private $publicKey;
 
-    public function __construct(string $clientId, string $clientSecret, string $publicKey, CurlInterface $curl)
+    public function __construct(string $clientId, string $clientSecret, string $publicKey)
     {
-        parent::__construct($clientId, $clientSecret, $curl);
+        parent::__construct($clientId, $clientSecret);
+
         $this->publicKey = $publicKey;
     }
 
@@ -35,13 +35,13 @@ class OAuthOk extends OAuthBase implements OAuthBaseInterface
      *
      * @see https://apiok.ru/wiki/pages/viewpage.action?pageId=81822109
      *
-     * @param Object $dataRaw Сырые данные после запроса access_token от сервера сайта Одноклассники
+     * @param \stdClass $raw Сырые данные после запроса access_token от сервера сайта Одноклассники
      *
-     * @return TokenCodeResponseInterface Модель токена
+     * @return TokenCodeResponse Модель токена
      */
-    public function getTokenCodeResponse($dataRaw): TokenCodeResponseInterface
+    public function getTokenCodeResponse(\stdClass $raw): CommonTokenCodeResponse
     {
-        return new TokenCodeResponse($dataRaw->access_token);
+        return new TokenCodeResponse($raw);
     }
 
     public function getTokenUrl(): string
@@ -53,11 +53,11 @@ class OAuthOk extends OAuthBase implements OAuthBaseInterface
      * @param string $code
      * @param string $redirectUri
      *
-     * @return TokenCodeResponseInterface|null
+     * @return CommonTokenCodeResponse|null
      *
      * @throws
      */
-    public function getAuthorizationCode(string $code, string $redirectUri): ?TokenCodeResponseInterface
+    public function getAuthorizationCode(string $code, string $redirectUri): ?CommonTokenCodeResponse
     {
         $post = [
             'client_id' => $this->clientId,
