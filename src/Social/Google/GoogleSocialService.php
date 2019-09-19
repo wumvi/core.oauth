@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Google;
 
+use Core\OAuth\Exception\GetUserException;
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Google\OAuthGoogle;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
@@ -13,18 +15,12 @@ use LightweightCurl\Request;
 class GoogleSocialService
 {
     /**
-     * @var Curl Расширенный curl
-     */
-    protected $curl;
-
-    /**
      * @var OAuthGoogle
      */
     private $authGoogle;
 
     public function __construct(OAuthGoogle $authGoogle)
     {
-        $this->curl = new Curl();
         $this->authGoogle = $authGoogle;
     }
 
@@ -41,19 +37,25 @@ class GoogleSocialService
     /**
      * @param string $accessToken
      *
-     * @return GoogleUser|null
+     * @return GoogleUser
+     *
+     * @throws
      */
-    public function getUserInfo(string $accessToken): ?GoogleUser
+    public function getUserInfo(string $accessToken): GoogleUser
     {
         $url = vsprintf('https://www.googleapis.com/oauth2/v1/userinfo?access_token=%s', [$accessToken,]);
 
         $request = new Request();
         $request->setUrl($url);
-
-        $response = $this->curl->call($request);
+        $curl = new Curl();
+        $response = $curl->call($request);
         $data = json_decode($response->getData());
-        if ($data === null) {
-            return null;
+        if (empty($data)) {
+            throw new JsonException('Wrong json for getting google user', JsonException::WRONG_JSON_CODE);
+        }
+
+        if (isset($data->error)) {
+            throw new GetUserException($data->error->message, $data->error->code);
         }
 
         return new GoogleUser($data);

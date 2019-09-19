@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Vk;
 
+use Core\OAuth\Exception\GetUserException;
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Vk\OAuthVk;
 use LightweightCurl\Curl;
 use LightweightCurl\ICurl;
@@ -78,8 +80,16 @@ class VkSocialService
 
         $response = $this->curl->call($request);
         $data = json_decode($response->getData());
+        if (empty($data)) {
+            throw new JsonException('Wrong json for getting vk user', JsonException::WRONG_JSON_CODE);
+        }
+
+        if (isset($data->error)) {
+            throw new GetUserException($data->error->error_msg, $data->error->error_code);
+        }
+
         if (!isset($data->response) || !$data->response || count($data->response) == 0) {
-            return null;
+            throw new JsonException('Unsupported format json', JsonException::UNSUPPORTED_FORMAT);
         }
 
         return new VkUser($data->response[0]);

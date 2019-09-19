@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Facebook;
 
+use Core\OAuth\Exception\GetUserException;
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Facebook\OAuthFacebook;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
@@ -15,14 +17,6 @@ use LightweightCurl\Request;
  */
 class FbSocialService
 {
-    private const URL_API = 'https://graph.facebook.com/me?fields=' .
-    'birthday,website,email,first_name,last_name,gender&access_token=%s';
-
-    /**
-     * @var Curl Расширенный curl
-     */
-    protected $curl;
-
     /**
      * @var OAuthFacebook
      */
@@ -35,7 +29,6 @@ class FbSocialService
      */
     public function __construct(OAuthFacebook $authFacebook)
     {
-        $this->curl = new Curl();
         $this->oauthFacebook = $authFacebook;
     }
 
@@ -54,26 +47,29 @@ class FbSocialService
      *
      * @param string $authToken Токен после авторизации
      *
-     * @return FbUser|null Модель пользователя
+     * @return FbUser Модель пользователя
      *
      * @throws
      *
      * @see https://developers.facebook.com/docs/graph-api/reference/user
      */
-    public function getUserInfo(string $authToken): ?FbUser
+    public function getUserInfo(string $authToken): FbUser
     {
-        $url = vsprintf(self::URL_API, [$authToken,]);
+        $url = 'https://graph.facebook.com/me?fields=' .
+            'birthday,website,email,first_name,last_name,gender&access_token=' . $authToken;
 
         $request = new Request();
         $request->setUrl($url);
 
-        $response = $this->curl->call($request);
-        if ($response->getHttpCode() !== 200) {
-            return null;
-        }
+        $curl = new Curl();
+        $response = $curl->call($request);
         $data = json_decode($response->getData());
-        if ($data === null) {
-            return null;
+        if (empty($data)) {
+            throw new JsonException('Wrong json for getting fb user', JsonException::WRONG_JSON_CODE);
+        }
+
+        if (isset($data->error)) {
+            throw new GetUserException($data->error->message, $data->error->code);
         }
 
         return new FbUser($data);

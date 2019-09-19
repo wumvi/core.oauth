@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Mailru;
 
+use Core\OAuth\Exception\GetUserException;
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Mailru\OAuthMailRu;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
@@ -17,14 +19,6 @@ class MailRuService
     const URL_API = 'http://www.appsmail.ru/platform/api';
 
     /**
-     * @var Curl Расширенный curl
-     */
-    protected $curl;
-
-    protected $siteId;
-
-    protected $clientSecret;
-    /**
      * @var OAuthMailRu
      */
     protected $mailRuData;
@@ -36,7 +30,6 @@ class MailRuService
      */
     public function __construct(OAuthMailRu $mailRuData)
     {
-        $this->curl = new Curl();
         $this->mailRuData = $mailRuData;
     }
 
@@ -52,14 +45,14 @@ class MailRuService
     /**
      * @param string $accessToken
      *
-     * @return MailRuUser|null Массив моделей пользователей
+     * @return MailRuUser Массив моделей пользователей
      *
      * @throws
      *
      * @see https://api.mail.ru/docs/guides/restapi/
      * @see https://api.mail.ru/docs/reference/rest/users.getInfo/
      */
-    public function getUserInfo(string $accessToken): ?MailRuUser
+    public function getUserInfo(string $accessToken): MailRuUser
     {
         // Ключи должны быть в алфавитном порядке, это крайне важно!
         $params = [
@@ -74,10 +67,16 @@ class MailRuService
         $request->setData($params);
         $request->setMethod(Request::METHOD_POST);
 
-        $response = $this->curl->call($request);
+        $curl = new Curl();
+        $response = $curl->call($request);
+        var_dump($response);
         $data = json_decode($response->getData());
-        if ($data === null || isset($data->error)) {
-            return null;
+        if (empty($data)) {
+            throw new JsonException('Wrong json for getting mail.ru user', JsonException::WRONG_JSON_CODE);
+        }
+
+        if (isset($data->error)) {
+            throw new GetUserException($data->error->error_msg, $data->error->error_code);
         }
 
         return new MailRuUser($data[0]);

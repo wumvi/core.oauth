@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Stackoverflow;
 
+use Core\OAuth\Exception\GetUserException;
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Stackoverflow\OAuthStackoverflow;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
@@ -52,11 +54,11 @@ class StackoverflowService
 
         $data = json_decode($response->getData());
         if (empty($data)) {
-            throw new \Exception('Wrong json');
+            throw new JsonException('Wrong json for getting stackoverflow user', JsonException::WRONG_JSON_CODE);
         }
 
         if (isset($data->error_id)) {
-            throw new \Exception($data->error_message, $data->error_id);
+            throw new GetUserException($data->error_message, $data->error_id);
         }
 
         return new StackoverflowUser($data->items[0]);

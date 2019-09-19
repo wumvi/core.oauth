@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Yandex;
 
+use Core\OAuth\Exception\GetUserException;
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Yandex\OAuthYandex;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
@@ -13,11 +15,6 @@ use LightweightCurl\Request;
 class YandexService
 {
     private const URL_API = 'https://login.yandex.ru/info?format=json&oauth_token=%s';
-
-    /**
-     * @var Curl Расширенный curl
-     */
-    protected $curl;
 
     /**
      * @var OAuthYandex
@@ -31,7 +28,6 @@ class YandexService
      */
     public function __construct(OAuthYandex $authYandex)
     {
-        $this->curl = new Curl();
         $this->authYandex = $authYandex;
     }
 
@@ -57,13 +53,13 @@ class YandexService
 
         $request = new Request();
         $request->setUrl($url);
-
-        $response = $this->curl->call($request);
-        $raw = json_decode($response->getData());
-        if ($raw === null) {
-            return null;
+        $curl = new Curl();
+        $response = $curl->call($request);
+        $data = json_decode($response->getData());
+        if (empty($data)) {
+            throw new JsonException('Wrong json for getting yandex user', JsonException::WRONG_JSON_CODE);
         }
 
-        return new YaUser($raw);
+        return new YaUser($data);
     }
 }

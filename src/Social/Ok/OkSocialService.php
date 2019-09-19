@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Ok;
 
+use Core\OAuth\Exception\GetUserException;
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Ok\OAuthOk;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
@@ -16,9 +18,6 @@ class OkSocialService
 {
     private const URL_API = 'http://api.odnoklassniki.ru/fb.do?%s';
 
-    /** @var Curl */
-    protected $curl;
-
     /**
      * @var OAuthOk
      */
@@ -31,7 +30,6 @@ class OkSocialService
      */
     public function __construct(OAuthOk $authOk)
     {
-        $this->curl = new Curl();
         $this->authOk = $authOk;
     }
 
@@ -50,11 +48,11 @@ class OkSocialService
      *
      * @param string $authToken AuthToken
      *
-     * @return OkUser|null
+     * @return OkUser
      *
      * @throws
      */
-    public function getUserInfo(string $authToken): ?OkUser
+    public function getUserInfo(string $authToken): OkUser
     {
         $sign = md5($authToken . $this->authOk->getClientSecret());
         $sing = md5('application_key=' . $this->authOk->getPublicKey() . 'method=users.getCurrentUser' . $sign);
@@ -70,13 +68,17 @@ class OkSocialService
 
         $request = new Request();
         $request->setUrl($url);
-
-        $response = $this->curl->call($request);
-        $raw = json_decode($response->getData());
-        if ($raw === null) {
-            return null;
+        $curl = new Curl();
+        $response = $curl->call($request);
+        $data = json_decode($response->getData());
+        if (empty($data)) {
+            throw new JsonException('Wrong json for getting ok user', JsonException::WRONG_JSON_CODE);
         }
 
-        return new OkUser($raw);
+        if (isset($data->error_code)) {
+            throw new GetUserException($data->error_msg, $data->error_code);
+        }
+
+        return new OkUser($data);
     }
 }
