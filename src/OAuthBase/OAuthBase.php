@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase;
 
+use Core\OAuth\Exception\JsonException;
 use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
@@ -46,6 +47,8 @@ abstract class OAuthBase
      * @param mixed $data Данные
      *
      * @return CommonTokenCodeResponse
+     *
+     * @throws
      */
     abstract public function getTokenCodeResponse(\stdClass $data): CommonTokenCodeResponse;
 
@@ -55,11 +58,11 @@ abstract class OAuthBase
      * @param string $code Код от редиректа
      * @param string $redirectUri Страница редиректа. *По факту не используемый параметр для запроса
      *
-     * @return CommonTokenCodeResponse|null Ответ сервера
+     * @return CommonTokenCodeResponse Ответ сервера
      *
      * @throws
      */
-    public function getAuthorizationCode(string $code, string $redirectUri): ?CommonTokenCodeResponse
+    public function getAuthorizationCode(string $code, string $redirectUri): CommonTokenCodeResponse
     {
         $post = [
             'client_id' => $this->clientId,
@@ -70,46 +73,19 @@ abstract class OAuthBase
         ];
 
         $request = new Request();
+        $request->setTimeout(25);
         $request->setUrl($this->getTokenUrl());
         $request->setData($post);
         $request->setMethod(Request::METHOD_POST);
+        $request->addHeader('Accept', 'application/json');
 
         $response = $this->curl->call($request);
         $data = json_decode($response->getData());
-        // var_dump($response);
-
-        if ($response->getHttpCode() !== 200) {
-            throw new \Exception('Error during request');
+        if (empty($data)) {
+            throw new JsonException('Wrong Authorization Code json', JsonException::WRONG_JSON_CODE);
         }
 
-        return $data === null || isset($data->error) ? null : $this->getTokenCodeResponse($data);
-    }
-
-    /**
-     * @param $refreshToken
-     *
-     * @return CommonTokenCodeResponse|null
-     *
-     * @throws
-     */
-    public function getRefreshTokenCode($refreshToken): ?CommonTokenCodeResponse
-    {
-        $post = [
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'grant_type' => 'refresh_token',
-            'refresh_token' => $refreshToken
-        ];
-
-        $request = new Request();
-        $request->setUrl($this->getTokenUrl());
-        $request->setData($post);
-        $request->setMethod(Request::METHOD_POST);
-
-        $response = $this->curl->call($request);
-        $data = json_decode($response->getData());
-
-        return $data === null || isset($data->error) ? null : $this->getTokenCodeResponse($data);
+        return $this->getTokenCodeResponse($data);
     }
 
     public function getClientId(): string

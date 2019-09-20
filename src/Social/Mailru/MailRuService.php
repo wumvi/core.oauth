@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\OAuth\Social\Mailru;
+namespace Core\OAuth\Social\MailRu;
 
 use Core\OAuth\Exception\GetUserException;
 use Core\OAuth\Exception\JsonException;
-use Core\OAuth\OAuthBase\Mailru\OAuthMailRu;
+use Core\OAuth\OAuthBase\MailRu\OAuthMailRu;
 use LightweightCurl\Curl;
 use LightweightCurl\Request;
 
@@ -24,7 +24,7 @@ class MailRuService
     protected $mailRuData;
 
     /**
-     * MailruService constructor.
+     * MailRuService constructor.
      *
      * @param OAuthMailRu $mailRuData
      */
@@ -69,7 +69,6 @@ class MailRuService
 
         $curl = new Curl();
         $response = $curl->call($request);
-        var_dump($response);
         $data = json_decode($response->getData());
         if (empty($data)) {
             throw new JsonException('Wrong json for getting mail.ru user', JsonException::WRONG_JSON_CODE);

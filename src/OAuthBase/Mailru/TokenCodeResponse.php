@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\OAuth\OAuthBase\Mailru;
+namespace Core\OAuth\OAuthBase\MailRu;
 
 use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 

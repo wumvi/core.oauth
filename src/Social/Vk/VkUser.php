@@ -3,31 +3,20 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Vk;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя VK
  */
-class VkUser
+class VkUser implements ISocialUser
 {
     /** @var string Email пользователя */
     private $email = '';
+    private $raw;
 
-    private $isClosed = true;
-
-    /** @var int */
-    private $id;
-    private $firstName;
-    private $lastName;
-    private $birthday;
-    private $sex;
-
-    public function __construct(\stdClass $data)
+    public function __construct(\stdClass $raw)
     {
-        $this->id = (int)$data->id;
-        $this->firstName = $data->first_name;
-        $this->lastName = $data->last_name;
-        $this->birthday = $data->bdate ?? '';
-        $this->sex = $data->sex;
-        $this->isClosed = $data->is_closed;
+        $this->raw = $raw;
     }
 
     /**
@@ -49,33 +38,18 @@ class VkUser
         return $this->email;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
-        return $this->id;
+        return $this->raw->id . '';
     }
 
     public function getFirstName(): string
     {
-        return $this->firstName;
+        return $this->raw->first_name;
     }
 
     public function getLastName(): string
     {
-        return $this->lastName;
-    }
-
-    public function getBirthday(): string
-    {
-        return $this->birthday;
-    }
-
-    public function getSex(): string
-    {
-        return $this->sex;
-    }
-
-    public function isClosed(): bool
-    {
-        return $this->isClosed;
+        return $this->raw->last_name;
     }
 }

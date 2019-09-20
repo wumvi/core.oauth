@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\OAuth\Social\MailRu;
+namespace Core\OAuth\Social\GitHub;
 
 use Core\OAuth\Social\ISocialUser;
 
 /**
- * Модель пользователя сайта Mail.ru
+ * Модель пользователя сайта Google.com
  */
-class MailRuUser implements ISocialUser
+class GitHubUser implements ISocialUser
 {
     private $raw;
 
@@ -19,21 +19,21 @@ class MailRuUser implements ISocialUser
 
     public function getId(): string
     {
-        return $this->raw->uid;
+        return $this->raw->id . '';
     }
 
     public function getFirstName(): string
     {
-        return $this->raw->first_name;
+        return '';
     }
 
     public function getLastName(): string
     {
-        return $this->raw->last_name;
+        return '';
     }
 
     public function getEmail(): string
     {
-        return $this->raw->email;
+        return '';
     }
 }

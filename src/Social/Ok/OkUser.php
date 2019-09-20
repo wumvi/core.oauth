@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Ok;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя сайта Одноклассники
  */
-class OkUser
+class OkUser implements ISocialUser
 {
     /** @var \stdClass */
     private $raw;
@@ -16,9 +18,9 @@ class OkUser
         $this->raw = $raw;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
-        return (int)$this->raw->uid;
+        return $this->raw->uid;
     }
 
     public function getFirstName(): string
@@ -31,11 +33,6 @@ class OkUser
         return $this->raw->last_name;
     }
 
-    public function getBirthday(): string
-    {
-        return $this->raw->birthday;
-    }
-
     /**
      * Получаем Email пользователя, если он есть
      * @return string Email пользователя
@@ -43,10 +40,5 @@ class OkUser
     public function getEmail(): string
     {
         return $this->raw->has_email ? $this->raw->email : '';
-    }
-
-    public function getSex(): string
-    {
-        return $this->raw->gender;
     }
 }

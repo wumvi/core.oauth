@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Stackoverflow;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя сайта Facebook
  */
-class StackoverflowUser
+class StackoverflowUser implements ISocialUser
 {
     /** @var \stdClass */
     private $raw;
@@ -16,14 +18,9 @@ class StackoverflowUser
         $this->raw = $raw;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
-        return $this->raw->user_id;
-    }
-
-    public function getDisplayName(): string
-    {
-        return $this->raw->display_name;
+        return $this->raw->user_id . '';
     }
 
     public function getFirstName(): string
@@ -40,5 +37,10 @@ class StackoverflowUser
         [$firstName, $lastName] = count($data) >= 2 ? $data : [$data[0]];
 
         return $lastName;
+    }
+
+    public function getEmail(): string
+    {
+        return '';
     }
 }

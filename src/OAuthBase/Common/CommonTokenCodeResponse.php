@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Common;
 
-abstract class CommonTokenCodeResponse
+class CommonTokenCodeResponse
 {
     /**
      * @var string
@@ -30,5 +30,10 @@ abstract class CommonTokenCodeResponse
     public function getAccessToken(): string
     {
         return $this->token;
+    }
+
+    public function getRaw(): \stdClass
+    {
+        return $this->raw;
     }
 }

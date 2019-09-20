@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\OAuth\OAuthBase\Vk;
 
+use Core\OAuth\Exception\OAuthException;
 use Core\OAuth\OAuthBase\Common\CommonTokenCodeResponse;
 use Core\OAuth\OAuthBase\OAuthBase;
 
@@ -12,13 +13,18 @@ use Core\OAuth\OAuthBase\OAuthBase;
 class OAuthVk extends OAuthBase
 {
     /**
-     * @param \stdClass $raw Сырые данные из запроса
+     * @param \stdClass $data Сырые данные из запроса
      *
      * @return TokenCodeResponse
+     *
+     * @throws
      */
-    public function getTokenCodeResponse(\stdClass $raw): CommonTokenCodeResponse
+    public function getTokenCodeResponse(\stdClass $data): CommonTokenCodeResponse
     {
-        return new TokenCodeResponse($raw);
+        if (isset($data->error)) {
+            throw new OAuthException($data->error);
+        }
+        return new TokenCodeResponse($data);
     }
 
     public function getTokenUrl(): string

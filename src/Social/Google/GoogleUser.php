@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Google;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя сайта Google.com
  */
-class GoogleUser
+class GoogleUser implements ISocialUser
 {
     private $raw;
 
@@ -15,9 +17,9 @@ class GoogleUser
         $this->raw = $raw;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
-        return (int)$this->raw->id;
+        return $this->raw->id;
     }
 
     public function getFirstName(): string
@@ -33,10 +35,5 @@ class GoogleUser
     public function getEmail(): string
     {
         return $this->raw->email;
-    }
-
-    public function getSex(): string
-    {
-        return $this->raw->gender;
     }
 }

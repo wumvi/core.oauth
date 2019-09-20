@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Yandex;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя сайта Яндекс
  */
-class YaUser
+class YaUser implements ISocialUser
 {
     private $raw;
 
@@ -15,9 +17,9 @@ class YaUser
         $this->raw = $raw;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
-        return (int)$this->raw->id;
+        return $this->raw->id;
     }
 
     public function getFirstName(): string
@@ -33,15 +35,5 @@ class YaUser
     public function getEmail(): string
     {
         return $this->raw->default_email;
-    }
-
-    public function getBirthday(): string
-    {
-        return $this->raw->birthday;
-    }
-
-    public function getSex(): string
-    {
-        return $this->raw->sex;
     }
 }

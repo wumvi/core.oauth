@@ -24,16 +24,16 @@ interface IOAuthBase
      *
      * @throws
      */
-    public function getAuthorizationCode(string $code, string $redirectUri): ?CommonTokenCodeResponse;
+    public function getAuthorizationCode(string $code, string $redirectUri): CommonTokenCodeResponse;
 
-    /**
-     * @param $refreshToken
-     *
-     * @return CommonTokenCodeResponse|null
-     *
-     * @throws
-     */
-    public function getRefreshTokenCode($refreshToken): ?CommonTokenCodeResponse;
+//    /**
+//     * @param $refreshToken
+//     *
+//     * @return CommonTokenCodeResponse|null
+//     *
+//     * @throws
+//     */
+//    public function getRefreshTokenCode($refreshToken): ?CommonTokenCodeResponse;
 
     public function getClientId(): string;
 

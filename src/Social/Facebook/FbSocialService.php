@@ -20,21 +20,21 @@ class FbSocialService
     /**
      * @var OAuthFacebook
      */
-    private $oauthFacebook;
+    private $oauth;
 
     /**
      * FbSocialService constructor.
      *
-     * @param OAuthFacebook $authFacebook
+     * @param OAuthFacebook $oauth
      */
-    public function __construct(OAuthFacebook $authFacebook)
+    public function __construct(OAuthFacebook $oauth)
     {
-        $this->oauthFacebook = $authFacebook;
+        $this->oauth = $oauth;
     }
 
     public function getLink(string $redirectUrl, string $oauthId): string
     {
-        $url = 'https://www.facebook.com/dialog/oauth?client_id=' . $this->oauthFacebook->getClientId();
+        $url = 'https://www.facebook.com/dialog/oauth?client_id=' . $this->oauth->getClientId();
         $url .= '&redirect_uri=' . $redirectUrl;
         $url .= '&state=' . $oauthId;
         $url .= '&response_type=code&scope=email';

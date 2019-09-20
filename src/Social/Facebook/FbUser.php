@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Core\OAuth\Social\Facebook;
 
+use Core\OAuth\Social\ISocialUser;
+
 /**
  * Модель пользователя сайта Facebook
  */
-class FbUser
+class FbUser implements ISocialUser
 {
     /** @var \stdClass */
     private $raw;
@@ -16,7 +18,7 @@ class FbUser
         $this->raw = $raw;
     }
 
-    public function getId(): int
+    public function getId(): string
     {
         return $this->raw->id;
     }
